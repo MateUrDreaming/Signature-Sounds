@@ -14,10 +14,10 @@ class Track:
             self.__title = track_title.strip()
 
         self.__artist = None
-        self.__album: Album | None = None
-        self.__track_url: str | None = None
+        self.__album: Album  = None
+        self.__track_url: str  = None
         # duration in seconds
-        self.__track_duration: int | None = None
+        self.__track_duration: int  = None
         self.__genres: list = []
 
     @property

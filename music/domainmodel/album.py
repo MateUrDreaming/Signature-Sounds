@@ -10,9 +10,9 @@ class Album:
         else:
             self.__title = None
 
-        self.__album_url: str | None = None
-        self.__album_type: str | None = None
-        self.__release_year: int | None = None
+        self.__album_url: str  = None
+        self.__album_type: str  = None
+        self.__release_year: int  = None
 
     @property
     def album_id(self) -> int:
