@@ -13,7 +13,7 @@ class Track:
         if type(track_title) is str:
             self.__title = track_title.strip()
 
-        self.__artist = None
+        self.__artist: Artist = None
         self.__album: Album  = None
         self.__track_url: str  = None
         # duration in seconds
