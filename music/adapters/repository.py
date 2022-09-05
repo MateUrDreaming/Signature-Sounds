@@ -61,6 +61,13 @@ class AbstractRepository(abc.ABC):
         """
         raise NotImplementedError
     
+    @abc.abstractclassmethod
+    def get_track_ids_for_artist(self, artist_name: str):
+        """ Returns a list of ids representing tracks that are tagged by artist_name.
+        If there are no Tracks that are tagged by artist_name, this method returns an empty list.
+        """
+        raise NotImplementedError
+
     @abc.abstractmethod
     def get_track_ids_for_genre(self, genre_name: str):
         """ Returns a list of ids representing tracks that are tagged by genre_name. 
