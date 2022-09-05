@@ -74,6 +74,20 @@ class AbstractRepository(abc.ABC):
         If there are no Tracks that are tagged by album_name, this method returns an empty list.
         """
         raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_tracks_by_genre(self, target_genre: Genre) -> List[Track]:
+        """ Returns a list of tracks that have the target_genre. 
+        If there are no tracks with the given genre, this method returns an empty list.
+        """
+        raise NotImplementedError
+    
+    @abc.abstractmethod
+    def get_tracks_by_album(self, target_album: Album) -> List[Track]:
+        """ Returns a list of tracks that were made by the target_album. 
+        If there are no tracks associated with the given album, this method returns an empty list.
+        """
+        raise NotImplementedError
     
     @abc.abstractmethod
     def add_genre(self, genre: Genre):
@@ -121,3 +135,4 @@ class AbstractRepository(abc.ABC):
     def get_reviews(self):
         """ Returns the Reviews stored in the repository."""
         raise NotImplementedError
+
