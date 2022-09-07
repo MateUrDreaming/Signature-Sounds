@@ -1,10 +1,11 @@
 nav {
-    margin-bottom: 24px;
+    margin-bottom: 2vh;
 }
 
 body {
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
 }
 
 main {
@@ -17,8 +18,8 @@ td:first-child {
 
 .bottom { 
     bottom: 0;
-    position: fixed;
     width: 100%;
+    margin-top: 2vh;
 }
 
 .fa-github {
@@ -26,23 +27,36 @@ td:first-child {
   }
 
 .fa-github:hover {
-color: #8064A2;
+color: crimson;
+}
+
+.bg { 
+    background-color: crimson
+}
+
+.input-group-text { 
+    border: none !important;
 }
 
 .btn-primary {
-    background-color: #8064A2 !important;
-    border-color: #513f68 !important;
+    background-color: crimson !important;
+    border-color: #8d0d27 !important;
 }
 
 .btn-primary:hover{ 
-    background-color: #513f68 !important;
+    background-color: #8d0d27 !important;
+}
+
+.heading_text { 
+    color: crimson;
+    text-align: center;
 }
 
 .primary_text { 
     color: #fff;
 }
 .primary_text:hover{
-    color: #8064A2;
+    color: crimson;
     text-decoration: underline;
     font-weight: bold;
 }
