@@ -173,7 +173,7 @@ class MemoryRepository(AbstractRepository):
         return self.__albums
     
     def add_review(self, review: Review):
-        # Not sure if this is implemented correctly yet (does Track need this method)?
+        # Not sure if this is implemented correctly yet (i.e. does Track need this method)
         super().add_review(review)
         self.__reviews.append(review)
 
@@ -188,7 +188,22 @@ def populate(repo: MemoryRepository, data_path: Path):
     reader = TrackCSVReader(albums_file_name, tracks_file_name)
     reader.read_csv_files()
 
-    repo.add
+    for track in reader.dataset_of_tracks:
+        repo.add_track(track)
+
+    for artist in reader.dataset_of_artists:
+        repo.add_artist(artist)
+
+    for genre in reader.dataset_of_genres:
+        repo.add_genre(genre)
+    
+    for album in reader.dataset_of_albums:
+        repo.add_album(album)
+    
+    #repo.add_tracks(reader.dataset_of_tracks)
+    #repo.add_artists(reader.dataset_of_artists)
+    #repo.add_genres(reader.dataset_of_genres)
+    #repo.add_albums(reader.dataset_of_albums)
 
 
 
