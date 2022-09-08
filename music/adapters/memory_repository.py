@@ -36,7 +36,7 @@ class MemoryRepository(AbstractRepository):
 
     def add_track(self, track: Track):
         insort_left(self.__tracks, track)
-        self.__tracks_index[track.id] = track
+        self.__tracks_index[track.track_id] = track
     
     def get_track(self, id: int) -> Track:
         track = None
@@ -180,11 +180,11 @@ class MemoryRepository(AbstractRepository):
     def get_reviews(self):
         return self.__reviews
 
-def populate(repo: MemoryRepository, data_path: Path):
+def populate(data_path: Path, repo: MemoryRepository):
     """ Populates the given repository using data at the given path. """
     dirname = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    albums_file_name = os.path.join(dirname, 'data/raw_albums_excerpt.csv')
-    tracks_file_name = os.path.join(dirname, 'data/raw_tracks_excerpt.csv')
+    albums_file_name = os.path.join(dirname, 'adapters/data/raw_albums_excerpt.csv')
+    tracks_file_name = os.path.join(dirname, 'adapters/data/raw_tracks_excerpt.csv')
     reader = TrackCSVReader(albums_file_name, tracks_file_name)
     reader.read_csv_files()
 
