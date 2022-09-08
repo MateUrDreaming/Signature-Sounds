@@ -1,5 +1,8 @@
 import csv
+<<<<<<< HEAD
 import os
+=======
+>>>>>>> 97b68c4db545be632986eeedb2be4aeaee7625be
 from pathlib import Path
 from typing import List
 
@@ -48,10 +51,20 @@ class MemoryRepository(AbstractRepository):
         return track
     
     def get_tracks_by_artist(self, target_artist: Artist) -> List[Track]:
+<<<<<<< HEAD
         matching_tracks = list()
 
         try:
             for track in self.__tracks:
+=======
+        target_track = Track(track_id = None, track_title = None)
+        target_track.artist = target_artist
+        matching_tracks = list()
+
+        try:
+            index = self.tracks_index(target_track)
+            for track in self.__tracks[index:None]:
+>>>>>>> 97b68c4db545be632986eeedb2be4aeaee7625be
                 if track.artist == target_artist:
                     matching_tracks.append(track)
                 else:
@@ -62,6 +75,25 @@ class MemoryRepository(AbstractRepository):
 
         return matching_tracks
     
+<<<<<<< HEAD
+=======
+    def get_track_ids_for_artist(self, full_name: str):
+        # Linear search, to find the first occurence of an artist with the name artist_name.
+        track_artist = next((artist for artist in self.__artists if artist.full_name == artist), None)
+
+        # Retrieve the ids of tracks associated with the artist.
+        if track_artist is not None:
+            track_ids = list()
+            for track in self.__tracks:
+                if track.track_artist.full_name == full_name:
+                    track_ids.append(track.id)
+        else:
+            # No Album with name full_name, so return an empty list.
+            track_ids = list()
+        
+        return track_ids
+    
+>>>>>>> 97b68c4db545be632986eeedb2be4aeaee7625be
     def get_number_of_tracks(self) -> int:
         return len(self.__tracks)
 
@@ -74,6 +106,7 @@ class MemoryRepository(AbstractRepository):
         tracks = [self.__tracks_index[id] for id in existing_ids]
         return tracks
     
+<<<<<<< HEAD
     def get_track_ids_for_artist(self, artist_name: str):
         # Linear search, to find the first occurence of an artist with the name artist_name.
         artist = next((artist for artist in self.__artists if artist.artist_name == artist), None)
@@ -90,6 +123,8 @@ class MemoryRepository(AbstractRepository):
         
         return track_ids
     
+=======
+>>>>>>> 97b68c4db545be632986eeedb2be4aeaee7625be
     def get_track_ids_for_genre(self, genre_name: str):
         # Linear search, to find the first occurence of a Genre with the name genre_name.
         genre = next((genre for genre in self.__genres if genre.genre_name == genre_name), None)
@@ -123,6 +158,7 @@ class MemoryRepository(AbstractRepository):
         
         return track_ids
 
+<<<<<<< HEAD
     def get_tracks_by_genre(self, target_genre: Genre) -> List[Track]:
         matching_tracks = list()
 
@@ -154,6 +190,8 @@ class MemoryRepository(AbstractRepository):
 
         return matching_tracks
 
+=======
+>>>>>>> 97b68c4db545be632986eeedb2be4aeaee7625be
     def add_genre(self, genre: Genre):
         self.__genres.append(genre)
     
@@ -173,6 +211,7 @@ class MemoryRepository(AbstractRepository):
         return self.__albums
     
     def add_review(self, review: Review):
+<<<<<<< HEAD
         # Not sure if this is implemented correctly yet (i.e. does Track need this method)
         super().add_review(review)
         self.__reviews.append(review)
@@ -207,3 +246,10 @@ def populate(repo: MemoryRepository, data_path: Path):
 
 
 
+=======
+        # to implement
+        pass
+    
+    def get_reviews(self):
+        return self.__reviews
+>>>>>>> 97b68c4db545be632986eeedb2be4aeaee7625be

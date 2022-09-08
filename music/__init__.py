@@ -56,6 +56,12 @@ def create_app(test_config=None):
     def home():
         some_track = create_some_track()
         # Use Jinja to customize a predefined html page rendering the layout for showing a single track.
-        return render_template('simple_track.html', track=some_track)
+        return render_template('layout.html')
+    
+    @app.route('/home')
+    def new():
+        some_track = create_some_track()
+        # Use Jinja to customize a predefined html page rendering the layout for showing a single track.
+        return render_template('home.html')
 
     return app
