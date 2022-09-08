@@ -5,8 +5,8 @@ from flask import Flask, render_template
 # TODO: Access to the tracks should be implemented via the repository pattern and using blueprints, so this can not
 #  stay here!
 from music.domainmodel.track import Track
-import music.adapters.repository as repo
-from music.adapters.memory_repository import MemoryRepository, populate
+'''import music.adapters.repository as repo
+from music.adapters.memory_repository import MemoryRepository, populate'''
 
 
 # TODO: Access to the tracks should be implemented via the repository pattern and using blueprints, so this can not
@@ -30,10 +30,10 @@ def create_app(test_config=None):
         app.config.from_mapping(test_config)
         data_path = app.config['TEST_DATA_PATH']
     
-    # Create the MemoryRepository implementation for a memory-based repository.
+    '''# Create the MemoryRepository implementation for a memory-based repository.
     repo.repo_instance = MemoryRepository()
     # fill the content of the repository from the provided csv files
-    populate(data_path, repo.repo_instance)
+    populate(data_path, repo.repo_instance)'''
     
     # Build the application - these steps require an application context.
     '''
