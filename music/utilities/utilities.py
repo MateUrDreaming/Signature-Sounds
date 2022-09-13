@@ -1,12 +1,16 @@
 from flask import Blueprint, request, render_template, redirect, url_for, session
 
-#import music.adapters.repository as repo
-#import music.utilities.services as services
+import music.adapters.repository as repo
+import music.utilities.services as services
 
 
 # Configure Blueprint.
 utilities_blueprint = Blueprint('utilities_bp', __name__)
 
+
+def get_track_titles(): 
+    titles = services.get_track_names(repo.repo_instance)
+    return titles
 
 '''def get_tags_and_urls():
     tag_names = services.get_tag_names(repo.repo_instance)
