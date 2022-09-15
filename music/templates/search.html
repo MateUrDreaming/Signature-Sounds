@@ -3,16 +3,32 @@
         <div class="input-group md-form form-sm form-2 pl-0">
             <input class="form-control my-0 py-1 amber-border" type="text" placeholder="Search" aria-label="Search">
             <div class="input-group-append">
-              <span class="input-group-text amber lighten-3" id="basic-text1"><i class="fas fa-search text-grey"
+              <span class="input-group-text amber" id="basic-text1"><i class="fas fa-search text-black"
                   aria-hidden="true"></i></span>
             </div>
           </div>
-          <select class="selectpicker" data-live-search="true">
-            <option data-tokens="ketchup mustard">Hot Dog, Fries and a Soda</option>
-            <option data-tokens="mustard">Burger, Shake and a Smile</option>
-            <option data-tokens="frosting">Sugar, Spice and all things nice</option>
-          </select>
-          
+          <div class="mt-2 col-md-12 text-center">
+            <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#as">Advance Search <i class="fa-solid fa-caret-down"></i></button>
+            <div id="as" class="collapse container">
+              <div class="row mt-2">
+                <select class="selectpicker col" data-style="btn-danger" data-live-search="true" multiple title="Which artist?" data-size="5" data-max-options="3">
+                  <option data-tokens="ketchup mustard">Hot Dog, Fries and a Soda</option>
+                  <option data-tokens="mustard">Burger, Shake and a Smile</option>
+                  <option data-tokens="frosting">Sugar, Spice and all things nice</option>
+                </select>
+                <select class="selectpicker col" data-style="btn-danger" data-live-search="true"  multiple title="Which album?" data-size="5" data-max-options="3">
+                  <option data-tokens="ketchup mustard">Hot Dog, Fries and a Soda</option>
+                  <option data-tokens="mustard">Burger, Shake and a Smile</option>
+                  <option data-tokens="frosting">Sugar, Spice and all things nice</option>
+                </select>
+                <select class="selectpicker col" data-style="btn-danger" data-live-search="true" multiple title="Which genre?" data-size="5" data-max-options="3">
+                  <option data-tokens="ketchup mustard">Hot Dog, Fries and a Soda</option>
+                  <option data-tokens="mustard">Burger, Shake and a Smile</option>
+                  <option data-tokens="frosting">Sugar, Spice and all things nice</option>
+                </select>
+              </div>
+            </div>
+          </div>
     </div>
 </form>
 
