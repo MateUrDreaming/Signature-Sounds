@@ -54,8 +54,6 @@ class MemoryRepository(AbstractRepository):
             for track in self.__tracks:
                 if track.artist == target_artist:
                     matching_tracks.append(track)
-                else:
-                    break
         except ValueError:
             # No tracks for specified artist. Simply return an empty list.
             pass
@@ -131,8 +129,6 @@ class MemoryRepository(AbstractRepository):
                 for genre in track.genres:
                     if genre == target_genre:
                         matching_tracks.append(track)
-                    else:
-                        break
         except ValueError:
             # No tracks for specified genre. Simply return an empty list.
             pass
@@ -146,8 +142,6 @@ class MemoryRepository(AbstractRepository):
             for track in self.__tracks:
                 if track.album == target_album:
                         matching_tracks.append(track)
-                else:
-                    break
         except ValueError:
             # No tracks for specified album. Simply return an empty list.
             pass
