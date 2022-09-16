@@ -172,6 +172,10 @@ class MemoryRepository(AbstractRepository):
     def get_albums(self) -> List[Album]:
         return self.__albums
     
+    def get_tracks(self) -> List[Track]:
+        return self.__tracks
+    
+    
     def add_review(self, review: Review):
         # Not sure if this is implemented correctly yet (i.e. does Track need this method)
         super().add_review(review)
