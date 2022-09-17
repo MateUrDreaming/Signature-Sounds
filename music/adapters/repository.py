@@ -55,9 +55,22 @@ class AbstractRepository(abc.ABC):
         raise NotImplementedError
     
     @abc.abstractmethod
+    def get_all_track_ids(self):
+        """ Returns a list of all ids of tracks stored in the repository.
+        """
+        raise NotImplementedError
+    
+    @abc.abstractmethod
     def get_tracks_by_id(self, id_list):
         """ Returns a list of Tracks, whose id matches those in id_list, from the repository.
         If there are no matches, this method returns an empty list.
+        """
+        raise NotImplementedError
+    
+    @abc.abstractclassmethod
+    def get_track_ids_for_titles(self, title: str):
+        """ Returns a list of ids representing tracks that are tagged by title.
+        If there are no Tracks that are tagged by title, this method returns an empty list.
         """
         raise NotImplementedError
     
