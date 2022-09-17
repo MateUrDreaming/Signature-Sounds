@@ -96,13 +96,13 @@ class MemoryRepository(AbstractRepository):
 
     def get_track_ids_for_artist(self, artist_name: str):
         # Linear search, to find the first occurence of an artist with the name artist_name.
-        artist = next((artist for artist in self.__artists if artist.full_name == artist_name), None)
+        artist = next((artist for artist in self.__artists if artist.artist_name == artist), None)
 
         # Retrieve the ids of tracks associated with the artist.
         if artist is not None:
             track_ids = list()
             for track in self.__tracks:
-                if track.artist.full_name == artist_name:
+                if track.artist.artist_name == artist_name:
                     track_ids.append(track.track_id)
         else:
             # No artist with name artist_name, so return an empty list.
