@@ -29,10 +29,10 @@ def create_app(test_config=None):
         # Register blueprints.
         from .home import home
         app.register_blueprint(home.home_blueprint)
+    
+        from .tracks import tracks
+        app.register_blueprint(tracks.tracks_blueprint)
     '''
-        from .news import news
-        app.register_blueprint(news.news_blueprint)
-
         from .authentication import authentication
         app.register_blueprint(authentication.authentication_blueprint)
 

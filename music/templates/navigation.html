@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-md navbar-light bg-dark">
   <div class="container">
-    <a href="#" class="navbar-brand">
+    <a href="{{ url_for('home_bp.home') }}" class="navbar-brand">
         <img src="static/images/music.png" height="36" width="36" alt="Logo">
     </a>
     <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
@@ -9,9 +9,9 @@
 
     <div class="collapse navbar-collapse" id="navbarCollapse">
         <div class="navbar-nav">
+            <a href="{{ url_for('home_bp.home') }}" class="nav-item px-2 primary_text">Home</a>
+            <a href="{{ url_for('tracks_bp.search') }}" class="nav-item px-2 primary_text">Track List</a>
             <a href="#" class="nav-item px-2 primary_text">Reviews</a>
-            <a href="#" class="nav-item px-2 primary_text">About</a>
-            <a href="#" class="nav-item px-2 primary_text">Random</a>
         </div>
         <div class="navbar-nav ml-auto">
               <button type="button" class="btn btn-outline-light me-2 m-1">Login</button>

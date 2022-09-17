@@ -1,0 +1,24 @@
+<div class="mb-2" style="float:left">
+    {% if first_track_url is not none %}
+        <a href='{{first_track_url}}'><button type="button" class="btn btn-danger">First</button></a>
+    {% else %}
+        <button type="button" class="btn btn-danger" disabled>First</button>
+    {% endif %}
+    {% if prev_track_url is not none %}
+        <a href='{{prev_track_url}}'><button type="button" class="btn btn-danger">Previous</button></a>
+    {% else %}
+        <button type="button" class="btn btn-danger" disabled>Previous</button>
+    {% endif %}
+</div>
+<div style="float:right">
+    {% if next_track_url is not none %}
+        <a href='{{next_track_url}}'><button type="button" class="btn btn-danger">Next</button></a>
+    {% else %}
+        <button type="button" class="btn btn-danger" disabled>Next</button>
+    {% endif %}
+    {% if last_track_url is not none %}
+        <a href='{{last_track_url}}'><button type="button" class="btn btn-danger">Last</button></a>
+    {% else %}
+        <button type="button" class="btn btn-danger" disabled>Last</button>
+    {% endif %}
+</div>
