@@ -13,7 +13,7 @@ def create_search_form(repo: AbstractRepository, request_args):
     """ Returns a MovieSearchForm populated with options from the given repository. """
 
     form = MovieSearchForm(request_args, meta={'csrf': False})
-    form.type.choices = [("query", "Query"), ("artists", "Artists"), ("genres", "Genres"), ("albums", "Albums")] 
+    form.type.choices = [("query", "Track"), ("artists", "Artists"), ("genres", "Genres"), ("albums", "Albums")] 
 
     return form
 

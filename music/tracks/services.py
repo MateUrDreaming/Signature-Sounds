@@ -1,3 +1,4 @@
+from os import abort
 from typing import List, Iterable
 
 from music.adapters.repository import AbstractRepository
@@ -19,6 +20,7 @@ def get_track_ids_for_query(query, type, repo: AbstractRepository):
             track_ids = repo.get_track_ids_for_genre(query)
         elif type == "albums": 
             track_ids = repo.get_track_ids_for_album(query)
+        else: track_ids = list(repo.get_all_track_ids())
 
     return track_ids
 
@@ -28,6 +30,13 @@ def get_tracks_by_id(id_list, repo: AbstractRepository):
     # Convert Articles to dictionary form.
     tracks_as_dict = tracks_to_dict(tracks)
     return tracks_as_dict
+
+def get_track_by_id(track_id, repo: AbstractRepository): 
+    track = repo.get_tracks_by_id(track_id)
+
+    # Convert Articles to dictionary form.
+    track_as_dict = track_to_dict(track)
+    return track_as_dict
 
 '''
 ===========

@@ -61,6 +61,15 @@ color: crimson;
     font-weight: bold;
 }
 
+.link_text { 
+    color: crimson;
+}
+
+.link_text:hover { 
+    color: #8d0d27;
+    text-decoration: underline;
+    font-weight: bold; 
+}
 
 .disabled {
     pointer-events: none;

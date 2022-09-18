@@ -3,10 +3,6 @@ from datetime import date
 from flask import Blueprint
 from flask import request, render_template, redirect, url_for, session
 
-from flask_wtf import FlaskForm
-from wtforms import TextAreaField, HiddenField, SubmitField
-from wtforms.validators import DataRequired, Length, ValidationError
-
 import music.adapters.repository as repo
 import music.utilities.utilities as utilities
 import music.tracks.services as services
@@ -18,7 +14,7 @@ from music.utilities.utilities import create_search_form
 # Configure Blueprint.
 tracks_blueprint = Blueprint('tracks_bp', __name__)
 
-@tracks_blueprint.route('/search', methods=['GET', 'POST'])
+@tracks_blueprint.route('/search', methods=['GET'])
 def search():
     #initial values
     valid_query = False

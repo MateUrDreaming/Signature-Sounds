@@ -36,6 +36,9 @@ def create_app(test_config=None):
         from .authentication import authentication
         app.register_blueprint(authentication.authentication_blueprint)
 
+        from .tracks import information
+        app.register_blueprint(information.info_blueprint)
+
     '''
         from .utilities import utilities
         app.register_blueprint(utilities.utilities_blueprint)

@@ -25,25 +25,25 @@
                 <td>
                 <div class="d-flex align-items-center">
                     <div class="ms-3">
-                        <p class="fw-bold mb-1 d-inline-block text-truncate" style="max-width: 10rem;">{{track['id']}}. {{track['title']}}</p>
+                        <a href="{{ url_for('info_bp.track', track_id=track['id']) }}" class="link_text"><p class="fw-bold mb-1 d-inline-block text-truncate" style="max-width: 10rem;">{{track['id']}}. {{track['title']}}</p></a>
                         <p class="text-muted mb-0">{{track['duration']}} seconds </p>
                     </div>
                 </div>
                 </td>
                 <td>
-                    <p class="d-inline-block text-truncate" style="max-width: 7rem;">{{track['artist']}}</p>
+                    <a href="{{ url_for('tracks_bp.search', type='artists', query=track['artist']) }}" class="link_text"><p class="d-inline-block text-truncate" style="max-width: 7rem;">{{track['artist']}}</p></a>
                 </td>
                 <td>
                     <div class="d-flex align-items-center">
                         <div class="ms-3">
-                            <strong><p class="fw-bold mb-1 d-inline-block text-truncate" style="max-width: 11rem;">{{track['album'].title}}</p></strong>
+                            <a href="{{ url_for('tracks_bp.search', type='albums', query=track['album'].title) }}" class="link_text"><strong><p class="fw-bold mb-1 d-inline-block text-truncate" style="max-width: 11rem;">{{track['album'].title}}</p></strong></a>
                             <strong><p class="text-muted mb-0">Released in {{track['album'].release_year}}</p></strong>
                         </div>
                     </div>
                 </td>
                 <td class="" style="min-width: 10rem; max-width: 10rem;">
                 {% for genre in track['genres'] %}
-                    <span class="badge badge-danger">{{genre.name}}</span>
+                <a href="{{ url_for('tracks_bp.search', type='genres', query=genre.name) }}"><span class="badge badge-danger">{{genre.name}}</span></a>
                 {% endfor %}
                 </td>
             </tr>
