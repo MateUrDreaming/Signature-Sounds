@@ -81,7 +81,6 @@ class MemoryRepository(AbstractRepository):
     def get_track_ids_for_titles(self, key: str):
         # Linear search, to find the first occurence of an artist with the name artist_name.
         check_track = next((c_track for c_track in self.__tracks if c_track.title.lower().find(key.lower()) != -1), None)
-        print(check_track)
         # Retrieve the ids of tracks associated with the artist.
         if check_track is not None:
             track_ids = list()
@@ -112,7 +111,6 @@ class MemoryRepository(AbstractRepository):
         return track_ids
     
     def get_track_ids_for_genre(self, genre_name: str):
-        print()
         # Linear search, to find the first occurence of a Genre with the name genre_name.
         genre = next((genre for genre in self.__genres if (genre.name).lower() == genre_name.lower()), None)
 
