@@ -34,6 +34,9 @@ class MemoryRepository(AbstractRepository):
     def get_user(self, user_name) -> User:
         return next((user for user in self.__users if user.user_name == user_name), None)
 
+    def get_number_of_users(self) -> int:
+        return len(self.__users)
+
     def add_track(self, track: Track):
         insort_left(self.__tracks, track)
         self.__tracks_index[track.track_id] = track
@@ -54,8 +57,6 @@ class MemoryRepository(AbstractRepository):
             for track in self.__tracks:
                 if track.artist == target_artist:
                     matching_tracks.append(track)
-                else:
-                    break
         except ValueError:
             # No tracks for specified artist. Simply return an empty list.
             pass
@@ -155,8 +156,6 @@ class MemoryRepository(AbstractRepository):
                 for genre in track.genres:
                     if genre == target_genre:
                         matching_tracks.append(track)
-                    else:
-                        break
         except ValueError:
             # No tracks for specified genre. Simply return an empty list.
             pass
@@ -170,8 +169,6 @@ class MemoryRepository(AbstractRepository):
             for track in self.__tracks:
                 if track.album == target_album:
                         matching_tracks.append(track)
-                else:
-                    break
         except ValueError:
             # No tracks for specified album. Simply return an empty list.
             pass
@@ -232,11 +229,3 @@ def populate(data_path: Path, repo: MemoryRepository):
     #repo.add_artists(reader.dataset_of_artists)
     #repo.add_genres(reader.dataset_of_genres)
     #repo.add_albums(reader.dataset_of_albums)
-
-    def add_review(self, review: Review):
-        # to implement
-        pass
-    
-    def get_reviews(self):
-        return self.__reviews
-
