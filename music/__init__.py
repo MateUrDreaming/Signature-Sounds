@@ -32,10 +32,11 @@ def create_app(test_config=None):
     
         from .tracks import tracks
         app.register_blueprint(tracks.tracks_blueprint)
-    '''
+    
         from .authentication import authentication
         app.register_blueprint(authentication.authentication_blueprint)
 
+    '''
         from .utilities import utilities
         app.register_blueprint(utilities.utilities_blueprint)
     '''
