@@ -96,13 +96,13 @@ class MemoryRepository(AbstractRepository):
 
     def get_track_ids_for_artist(self, artist_name: str):
         # Linear search, to find the first occurence of an artist with the name artist_name.
-        artist = next((artist for artist in self.__artists if artist.artist_name == artist), None)
+        artist = next((artist for artist in self.__artists if (artist.full_name).lower() == artist_name.lower()), None)
 
         # Retrieve the ids of tracks associated with the artist.
         if artist is not None:
             track_ids = list()
             for track in self.__tracks:
-                if track.artist.artist_name == artist_name:
+                if (track.artist.full_name).lower() == artist_name.lower():
                     track_ids.append(track.track_id)
         else:
             # No artist with name artist_name, so return an empty list.
@@ -111,15 +111,16 @@ class MemoryRepository(AbstractRepository):
         return track_ids
     
     def get_track_ids_for_genre(self, genre_name: str):
+        print()
         # Linear search, to find the first occurence of a Genre with the name genre_name.
-        genre = next((genre for genre in self.__genres if genre.genre_name == genre_name), None)
+        genre = next((genre for genre in self.__genres if (genre.name).lower() == genre_name.lower()), None)
 
         # Retrieve the ids of tracks associated with the Genre.
         if genre is not None:
             track_ids = list()
             for track in self.__tracks:
                 for genre in track.genres:
-                    if genre.genre_name == genre_name:
+                    if (genre.name).lower() == genre_name.lower():
                         track_ids.append(track.track_id)
         else:
             # No Genre with name genre_name, so return an empty list.
@@ -129,14 +130,17 @@ class MemoryRepository(AbstractRepository):
     
     def get_track_ids_for_album(self, album_name: str):
         # Linear search, to find the first occurence of an Album with the name album_name.
-        album = next((album for album in self.__albums if album.album_name == album_name), None)
+        album = next((album for album in self.__albums if (album.title).lower() == album_name.lower()), None)
 
         # Retrieve the ids of tracks associated with the Album.
         if album is not None:
             track_ids = list()
             for track in self.__tracks:
-                if track.album.album_name == album_name:
-                    track_ids.append(track.track_id)
+                if track.album:
+                    if (track.album.title).lower() == album_name.lower():
+                        track_ids.append(track.track_id)
+                    else: 
+                        pass
         else:
             # No Album with name album_name, so return an empty list.
             track_ids = list()
