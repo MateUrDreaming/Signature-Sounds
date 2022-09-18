@@ -1,19 +1,12 @@
-<form action="">
+<form action="{{ url_for('tracks_bp.search') }}">
     <div class="container w-75">
       <div class="input-group mb-3 md-form form-sm form-2 pl-0">
         <div class="input-group-prepend">
-          <select class="selectpicker" data-style="btn-outline-danger" id="inputGroupSelect01">
-            <option selected>Tracks</option>
-            <option value="1">Artists</option>
-            <option value="2">Genres</option>
-            <option value="3">Albums</option>
-          </select>
+          {{ form.type(class='selectpicker show-tick form-control', id="inputGroupSelect01", **{'data-style':'btn-danger'}) }}
         </div>
-          <input class="form-control my-0 py-1 amber-border" type="text" placeholder="Search" aria-label="Search" for="inputGroupSelect02">
+          {{form.query(class="form-control my-0 py-1 amber-border", for="inputGroupSelect02", placeholder="Search", **{'aria-label':"Search"})}}
           <div class="input-group-append">
-            <button class="btn btn-primary" type="submit">
-              <i class="fa fa-search"></i>
-            </button>
+            {{form.submit(class="btn btn-primary")}}
           </div>
         </div>
     </div>

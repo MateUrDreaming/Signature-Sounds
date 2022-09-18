@@ -10,6 +10,7 @@ from wtforms.validators import DataRequired, Length, ValidationError
 import music.adapters.repository as repo
 import music.utilities.utilities as utilities
 import music.tracks.services as services
+from music.utilities.utilities import create_search_form
 
 #from music.authentication.authentication import login_required
 
@@ -74,5 +75,6 @@ def search():
         next_track_url=next_track_url,
         cursor=cursor,
         total_leng = len(track_ids),
-        leng = len(tracks)
+        leng = len(tracks),
+        form = utilities.create_search_form(repo, request.args)
     )
