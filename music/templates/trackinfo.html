@@ -1,0 +1,68 @@
+{% extends 'layout.html' %} {% block content %}
+<div class="container mt-5 w-75">
+    <div class="card bg-dark text-light">
+        <div class="container h-100 py-2">
+            <ul class="nav nav-tabs border-0" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active border border-danger border-bottom-0" href="">Information</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link border border-danger border-bottom-0" href="{{ url_for('info_bp.review', track_id=track['id']) }}">Review</a>
+                </li>
+            </ul>
+        
+            <div class="tab-content h-75">
+                <div class="tab-pane h-100 p-3 active border border-danger">
+                    <h2 class="text-center">{{track['title']}} </h2>
+                    <hr style="border-top: 1px solid white;">
+                    <div class="row m-1">
+                        <div class="col-2"><strong>Track URL</strong></div>
+                        <div class="col-10 text-danger"><a href="{{track['url']}}" class="link_text">{{track['url']}}</a></div>
+                    </div>
+                    <hr style="border-top: 1px solid white;">
+                    <div class="row m-1">
+                        <div class="col-2"><strong>Artist</strong></div>
+                        <div class="col-10 text-danger"><a href="{{ url_for('tracks_bp.search', type='artists', query=track['artist']) }}" class="link_text">{{track['artist']}}</a></div>
+                    </div>
+                    <hr style="border-top: 1px solid white;">
+                    <div class="row m-1">
+                        <div class="col-2"><strong>Genres</strong></div>
+                        <div class="col-10">
+                            {% for genre in track['genres'] %}
+                                <a href="{{ url_for('tracks_bp.search', type='genres', query=genre.name) }}"><span class="badge badge-danger">{{genre.name}}</span></a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <hr style="border-top: 1px solid white;">
+                    <div class="row m-1">
+                        <div class="col-2"><strong>Duration</strong></div>
+                        <div class="col-10 text-danger">{{track['duration']}} seconds</div>
+                    </div>
+                    <hr style="border-top: 1px solid white;">
+                    <div class="row m-1">
+                        <div class="col-2"><strong>Album</strong></div>
+                        <div class="col-10 text-danger"><a href="{{ url_for('tracks_bp.search', type='albums', query=track['album'].title) }}" class="link_text">{{track['album'].title}}</a></div>
+                    </div>
+                    <hr style="border-top: 1px solid white;">
+                    <div class="row m-1">
+                        <div class="col-2"><strong>Year</strong></div>
+                        <div class="col-10 text-danger">{{track['album'].release_year}}</div>
+                    </div>
+                    <hr style="border-top: 1px solid white;">
+                    <div class="row m-1">
+                        <div class="col-2"><strong>Album Type</strong></div>
+                        <div class="col-10 text-danger">{{track['album'].album_type}}</div>
+                    </div>
+                    <hr style="border-top: 1px solid white;">
+                    <div class="row m-1">
+                        <div class="col-2"><strong>Album URL</strong></div>
+                        <div class="col-10 text-danger"><a href="{{track['album'].album_url}}" class="link_text">{{track['album'].album_url}}</a></div>
+                    </div>
+                    <hr style="border-top: 1px solid white;">
+                </div>
+            </div>
+        
+        </div>
+    </div>
+</div>
+{% endblock %}

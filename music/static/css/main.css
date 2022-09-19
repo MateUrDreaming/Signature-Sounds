@@ -1,0 +1,149 @@
+nav {
+    margin-bottom: 2vh;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex-grow: 1
+}
+
+td:first-child {
+    font-weight: bold;
+}
+
+.bottom { 
+    bottom: 0;
+    width: 100%;
+    margin-top: 2vh;
+}
+
+.fa-github {
+    color: white;
+  }
+
+.fa-github:hover {
+color: crimson;
+}
+
+.bg { 
+    background-color: crimson
+}
+
+.input-group-text { 
+    border: none !important;
+}
+
+.btn-primary {
+    background-color: crimson !important;
+    border-color: #8d0d27 !important;
+}
+
+.btn-primary:hover{ 
+    background-color: #8d0d27 !important;
+}
+
+.heading_text { 
+    color: crimson;
+    text-align: center;
+}
+
+.primary_text { 
+    color: #fff;
+}
+.primary_text:hover{
+    color: crimson;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.link_text { 
+    color: crimson;
+}
+
+.link_text:hover { 
+    color: #8d0d27;
+    text-decoration: underline;
+    font-weight: bold; 
+}
+
+.nav-tabs .nav-link:not(.active) {
+    background-color: transparent !important;
+    color:#fff;
+    border-color: transparent !important;
+}
+
+/* Glyph, by Harry Roberts */
+
+hr.style {
+    overflow: visible; /* For IE */
+    height: 30px;
+    border-style: solid;
+    border-color: white;
+    border-width: 1px 0 0 0;
+    border-radius: 20px;
+}
+hr.style:before {
+    display: block;
+    content: "";
+    height: 30px;
+    margin-top: -31px;
+    border-style: solid;
+    border-color: white;
+    border-width: 0 0 1px 0;
+    border-radius: 20px;
+}
+
+.disabled {
+    pointer-events: none;
+}
+
+#pagination-large {
+    display: none;
+}
+
+#nav-large {
+    display: none;
+}
+
+.ui.statistics.stackable {
+    flex-direction: column;
+    align-items: center;
+}
+
+.ui.segment.very.compact {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.pre-wrap {
+    white-space: pre-wrap
+}
+
+@media only screen and (min-width: 600px) {
+    #pagination-large {
+        display: inline-flex;
+    }
+
+    #pagination-small {
+        display: none;
+    }
+
+    #nav-small {
+        display: none;
+    }
+
+    #nav-large {
+        display: flex;
+    }
+
+
+    .ui.statistics.stackable {
+        flex-direction: row;
+    }
+}
+
