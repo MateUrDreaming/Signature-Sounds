@@ -14,8 +14,13 @@
             <a href="#" class="nav-item px-2 primary_text">Reviews</a>
         </div>
         <div class="navbar-nav ml-auto">
-            <a href="{{ url_for('authentication_bp.login') }}"><button type="button" class="btn btn-outline-light me-2 m-1">Login</button></a>
-            <a href="{{ url_for('authentication_bp.register') }}"><button type="button" class="btn btn-primary m-1">Sign-up</button></a>
+            {% if 'user_name' in session %}
+                <a href="{{ url_for('authentication_bp.login') }}"><button type="button" class="btn btn-outline-light me-2 m-1"><i class="fa-solid fa-circle-user"></i> Profile</button></a>
+                <a href="{{ url_for('authentication_bp.logout') }}"><button type="button" class="btn btn-primary m-1">Log-out</button></a>
+            {%else%} 
+                <a href="{{ url_for('authentication_bp.login') }}"><button type="button" class="btn btn-outline-light me-2 m-1">Login</button></a>
+                <a href="{{ url_for('authentication_bp.register') }}"><button type="button" class="btn btn-primary m-1">Sign-up</button></a>
+            {%endif %}
           </div>
         </div>
     </div>

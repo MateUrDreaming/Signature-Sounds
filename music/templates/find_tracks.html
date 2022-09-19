@@ -4,9 +4,13 @@
 
 {% include 'search.html' %}
 <div class="container">
+    {%if total_leng == 0%} 
+    <img class="col-md-3 row mt-3 mx-auto" src="/static/images/dark.png">
+    <p class="mt-2 mb-3 text-center text-muted">No search results found, try again!
 
+    {% else %} 
     <p class="mt-2 mb-3 text-center text-muted">Showing results {{cursor+1}} - {{cursor+leng}} out of {{total_leng}}</p>
-
+    
     {% include 'page_btns.html' %}
 
     <table class="table table-hover align-middle mb-2 mt-2 bg-white">
@@ -52,6 +56,6 @@
     </table>
     <hr>
     {% include 'page_btns.html' %}
-
+    {%endif%}
 </div>
 {% endblock %}

@@ -1,6 +1,7 @@
 import csv
 import os
 from pathlib import Path
+import re
 from typing import List
 
 from bisect import bisect, bisect_left, insort_left
@@ -25,8 +26,9 @@ class MemoryRepository(AbstractRepository):
         self.__artists = list()
         self.__genres = list()
         self.__albums = list()
-        self.__reviews = list()
+        self.__reviews = dict()
         self.__users = list()
+        self.__reviews_list = list()
     
     def add_user(self, user: User):
         self.__users.append(user)
@@ -40,6 +42,7 @@ class MemoryRepository(AbstractRepository):
     def add_track(self, track: Track):
         insort_left(self.__tracks, track)
         self.__tracks_index[track.track_id] = track
+        self.__reviews[track] = []
     
     def get_track(self, id: int) -> Track:
         track = None
@@ -195,13 +198,20 @@ class MemoryRepository(AbstractRepository):
         return self.__tracks
     
     
-    def add_review(self, review: Review):
-        # Not sure if this is implemented correctly yet (i.e. does Track need this method)
-        super().add_review(review)
-        self.__reviews.append(review)
+    def add_review(self, track, review, user):
+        if review in self.__reviews_list:
+            return
 
-    def get_reviews(self):
-        return self.__reviews
+        self.__reviews[track].append((review, user))
+        
+        
+        self.__reviews_list.append(review)
+
+    def get_reviews(self, track):
+        try:
+            return self.__reviews[track]
+        except KeyError:
+            return [] 
 
 def populate(data_path: Path, repo: MemoryRepository):
     """ Populates the given repository using data at the given path. """

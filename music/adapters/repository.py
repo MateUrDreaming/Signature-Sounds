@@ -140,16 +140,13 @@ class AbstractRepository(abc.ABC):
         raise NotImplementedError
     
     @abc.abstractmethod
-    def add_review(self, review: Review):
+    def add_review(self, review: Review, user: User):
         """ Adds a Review to the repository.
         
         If the Review doesn't have bidirectional links with a Track and User, this method raises a 
         RepositoryException and doesn't update the repository.
         """
-        if review.user is None or review not in review.user.reviews:
-            raise RepositoryException('Review not correctly attached to a User')
-        if review.track is None or review not in review.track.reviews:
-            raise RepositoryException('Review not correctly attached to a Track')
+        raise NotImplementedError
     
     @abc.abstractmethod
     def get_reviews(self):

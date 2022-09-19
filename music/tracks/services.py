@@ -2,10 +2,13 @@ from os import abort
 from typing import List, Iterable
 
 from music.adapters.repository import AbstractRepository
+from music.domainmodel.review import Review
 from music.domainmodel.track import Track
 from music.domainmodel.artist import Artist
 from music.domainmodel.genre import Genre
 from music.domainmodel.album import Album
+from music.domainmodel.user import User
+
 
 
 def get_track_ids_for_query(query, type, repo: AbstractRepository):
@@ -38,6 +41,26 @@ def get_track_by_id(track_id, repo: AbstractRepository):
     track_as_dict = track_to_dict(track)
     return track_as_dict
 
+def get_reviews(repo: AbstractRepository, track): 
+    if track is None:
+        raise NonExistentArticleException
+    track = repo.get_track(track["id"])
+    reviews = repo.get_reviews(track)
+    return reviews
+
+def add_review(repo: AbstractRepository, track, review_text, rating, user:User): 
+
+    if track is None:
+        raise NonExistentArticleException
+    track = repo.get_track(track["id"])
+    # Create review.
+    review = Review(track, review_text, rating)
+    # Update the repository.
+    repo.add_review(track, review, user)
+    user = repo.get_user(user)
+    user.add_review(review)
+
+
 '''
 ===========
 CONVERT TO DICT
@@ -58,3 +81,15 @@ def track_to_dict(track: Track):
 
 def tracks_to_dict(tracks: Iterable[Track]):
     return [track_to_dict(track) for track in tracks]
+
+def review_to_dict(review: Review):
+    comment_dict = {
+        'user_name': review.user.user_name,
+        'article_id': review.article.id,
+        'comment_text': review.comment,
+        'timestamp': review.timestamp
+    }
+    return comment_dict
+class NonExistentArticleException(Exception):
+    pass
+
