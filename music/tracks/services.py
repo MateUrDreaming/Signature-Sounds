@@ -32,7 +32,7 @@ def get_tracks_by_id(id_list, repo: AbstractRepository):
     return tracks_as_dict
 
 def get_track_by_id(track_id, repo: AbstractRepository): 
-    track = repo.get_tracks_by_id(track_id)
+    track = repo.get_track(track_id)
 
     # Convert Articles to dictionary form.
     track_as_dict = track_to_dict(track)

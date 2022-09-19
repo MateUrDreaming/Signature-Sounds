@@ -46,7 +46,7 @@ class MemoryRepository(AbstractRepository):
         try:
             track = self.__tracks_index[id]
         except KeyError:
-            pass # Ignore exception, return None.
+            raise ValueError(f"no track with the id '{id}'")
             
         return track
     

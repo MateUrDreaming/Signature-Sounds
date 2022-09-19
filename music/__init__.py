@@ -6,6 +6,8 @@ from flask import Flask, render_template
 import music.adapters.repository as repo
 from music.adapters.memory_repository import MemoryRepository, populate
 
+def page_not_found(e):
+    return render_template('404.html'), 404
 
 def create_app(test_config=None):
     app = Flask(__name__)
@@ -39,9 +41,9 @@ def create_app(test_config=None):
         from .tracks import information
         app.register_blueprint(information.info_blueprint)
 
-    '''
         from .utilities import utilities
         app.register_blueprint(utilities.utilities_blueprint)
-    '''
+
+        app.register_error_handler(404, page_not_found)
 
     return app

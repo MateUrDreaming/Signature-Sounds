@@ -1,7 +1,7 @@
 from datetime import date
 
-from flask import Blueprint
-from flask import request, render_template, redirect, url_for, session
+from flask import Blueprint, abort
+from flask import request, render_template, redirect, url_for, session, abort
 
 import music.adapters.repository as repo
 import music.utilities.utilities as utilities
@@ -16,4 +16,11 @@ info_blueprint = Blueprint('info_bp', __name__)
 
 @info_blueprint.route('/track/<int:track_id>', methods=['GET'])
 def track(track_id: int):
-    return render_template ('trackinfo.html')
+    try:
+        track = services.get_track_by_id(int(track_id), repo.repo_instance)
+    except ValueError:
+        abort(404)
+
+    return render_template ('trackinfo.html',
+    track=track
+    )
