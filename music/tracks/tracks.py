@@ -1,7 +1,7 @@
 from datetime import date
 
 from flask import Blueprint
-from flask import request, render_template, redirect, url_for, session
+from flask import request, render_template, redirect, url_for, session, abort
 
 import music.adapters.repository as repo
 import music.utilities.utilities as utilities
@@ -23,10 +23,14 @@ def search():
     last_track_url = None
     next_track_url = None
     prev_track_url = None
+    valid_types = ["query", "artists", "genres", "albums", None]
 
     type= request.args.get('type')
     query = request.args.get('query')
     cursor = request.args.get('cursor')
+    
+    if type not in valid_types:
+        abort(404)
 
     if cursor is None:
         # No cursor query parameter, so initialise cursor to start at the beginning.
@@ -41,6 +45,12 @@ def search():
     #print(track_ids)
     # Retrieve the batch of tracls to display on the Web page.
     tracks = services.get_tracks_by_id(track_ids[cursor:cursor + tracks_per_page], repo.repo_instance)
+    
+    if cursor < 0: 
+        abort(404)
+    
+    if cursor > len(track_ids):
+        abort(404)
     
     if cursor > 0:
         # There are preceding articles, so generate URLs for the 'previous' and 'first' navigation buttons.

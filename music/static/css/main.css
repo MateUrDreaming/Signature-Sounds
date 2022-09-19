@@ -26,6 +26,10 @@ td:first-child {
     color: white;
   }
 
+.profile-icon { 
+    font-size: 7rem;
+}
+
 .fa-github:hover {
 color: crimson;
 }
