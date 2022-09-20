@@ -26,8 +26,9 @@ def test_repository_can_retrieve_a_track(in_memory_repo):
     assert track.title == "Food"
 
 def test_repository_does_not_retrieve_non_existent_track(in_memory_repo):
-    track = in_memory_repo.get_track(3191)
-    assert track is None
+    with pytest.raises(ValueError, match="no track with the id '3191'"):
+        track = in_memory_repo.get_track(3191)
+        assert str(ValueError.value) == "no track with the id '3191'"
 
 def test_repository_can_retrieve_tracks_by_artist(in_memory_repo):
     tracks = in_memory_repo.get_tracks_by_artist(Artist(1,'AWOL'))
