@@ -39,18 +39,14 @@ def search():
         # Convert cursor from string to int.
         cursor = int(cursor)
     
-    
+    cursor = (cursor // tracks_per_page) * 25
+
     # Retrieve track ids for tracks that are associated with the query.
     track_ids = services.get_track_ids_for_query(query, type, repo.repo_instance)
     #print(track_ids)
     # Retrieve the batch of tracls to display on the Web page.
     tracks = services.get_tracks_by_id(track_ids[cursor:cursor + tracks_per_page], repo.repo_instance)
     
-    if cursor < 0: 
-        abort(404)
-    
-    if cursor > len(track_ids):
-        abort(404)
     
     if cursor > 0:
         # There are preceding articles, so generate URLs for the 'previous' and 'first' navigation buttons.

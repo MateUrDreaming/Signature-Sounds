@@ -1,4 +1,5 @@
 from datetime import date
+from typing import Union
 
 from flask import Blueprint, abort
 from flask import request, render_template, redirect, url_for, session, abort
@@ -11,7 +12,7 @@ from wtforms.validators import DataRequired, Length, NumberRange, ValidationErro
 import music.adapters.repository as repo
 import music.utilities.utilities as utilities
 import music.tracks.services as services
-from music.utilities.utilities import create_search_form
+from music.utilities.utilities import create_playlist_form, PlaylistForm
 from music.authentication.authentication import login_required
 import music.authentication.services as auth
 
@@ -26,11 +27,12 @@ def track(track_id: int):
     user=None
     try:
         track = services.get_track_by_id(int(track_id), repo.repo_instance)
+        object = services.get_track_object_by_id(int(track_id), repo.repo_instance)
     except ValueError:
         abort(404)
 
     try:
-        user = auth.get_user(repo, session['username'])
+        user = auth.get_user_object(session['user_name'], repo.repo_instance)
     except ValueError:
         # No user with the given username
         pass
@@ -41,31 +43,24 @@ def track(track_id: int):
         # Invalid session
         session.clear()
         pass
+
+    form = create_playlist_form(repo.repo_instance)
 
 
     return render_template ('trackinfo.html',
     track=track,
-    user=user
+    user=user,
+    object=object,
+    form = form
     )
 
-@info_blueprint.route('/review/<int:track_id>', methods=['GET', 'POST'])
-def review(track_id: int):
-    sesh=False
+@info_blueprint.route('/track/liked', defaults={'track_id': None})
+@info_blueprint.route('/track/liked/<int:track_id>', methods=['GET', 'POST', 'DELETE'])
+@login_required
+def liked(track_id: Union[int, None]):
     user=None
-    reviews_per_page = 3
-    first_review_url = None
-    last_review_url = None
-    next_review_url = None
-    prev_review_url = None
-
     try:
-        track = services.get_track_by_id(int(track_id), repo.repo_instance)
-    except ValueError:
-        abort(404)
-    
-    try:
-        user = auth.get_user(session['user_name'], repo.repo_instance)['user_name']
-        sesh = True
+        user = auth.get_user_object(session['user_name'], repo.repo_instance)
     except ValueError:
         # No user with the given username
         pass
@@ -77,82 +72,70 @@ def review(track_id: int):
         session.clear()
         pass
 
-    reviews = services.get_reviews(repo.repo_instance, track)
+    if request.method in ['POST']:
+        try:
+            track = services.get_track_object_by_id(int(track_id), repo.repo_instance)
+        except ValueError:
+            abort(404)
+
+    if track not in user.liked_tracks:
+        services.add_track_to_likes(repo.repo_instance, user, track)
+        return redirect(request.referrer)
+    elif track in user.liked_tracks:
+        services.remove_track_from_likes(repo.repo_instance, user, track)
+        return redirect(request.referrer)
+
     
-    form = ReviewForm()
-    if form.validate_on_submit() and sesh:
+@info_blueprint.route('/playlist/<int:track_id>', methods=['POST'])
+@login_required
+def add_to_playlist(track_id: Union[int, None]):
+   
+    user=None
+ 
+    try:
+        user = auth.get_user_object(session['user_name'], repo.repo_instance)
+    except ValueError:
+        # No user with the given username
+        pass
+    except KeyError:
+        # No active session, anonymous/guest user
+        abort(404)
+        pass
+    except auth.UnknownUserException:
+        # Invalid session
+        session.clear()
+        abort(404)
+
+    form = create_playlist_form(repo.repo_instance)
+    if form.validate_on_submit():
         # Use the service layer to store the new review.
-        services.add_review(repo.repo_instance, track, form.review.data, form.rating.data, user)
+        services.add_playlist(repo.repo_instance, track_id, form.playlist.data)
         # Reload the page to show the new review
-        return redirect(url_for('info_bp.review', track_id=track_id))
+        return redirect(url_for('info_bp.track', track_id=track_id))
+
+
+    return redirect(url_for('info_bp.track', track_id=track_id))
     
-    if request.method == 'POST':
-        review_error_message = 'Invalid review.'
+@info_blueprint.route('/user/<int:playlist_id>/<int:track_id>', methods=['POST'])
+@login_required
+def remove_playlist(playlist_id, track_id):
     
-    cursor = request.args.get('cursor')
-
-    if cursor is None:
-        # No cursor query parameter, so initialise cursor to start at the beginning.
-        cursor = 0
-    else:
-        # Convert cursor from string to int.
-        cursor = int(cursor)
+    user=None
+ 
+    try:
+        user = auth.get_user_object(session['user_name'], repo.repo_instance)
+    except ValueError:
+        # No user with the given username
+        pass
+    except KeyError:
+        # No active session, anonymous/guest user
+        abort(404)
+        pass
+    except auth.UnknownUserException:
+        # Invalid session
+        session.clear()
+        abort(404)
     
-    reviews_to_be_displayed = reviews[cursor:cursor + reviews_per_page]
-    
-    if cursor > 0:
-        # There are preceding articles, so generate URLs for the 'previous' and 'first' navigation buttons.
-        prev_review_url = url_for('info_bp.review', track_id=track_id, cursor=cursor - reviews_per_page)
-        first_review_url = url_for('info_bp.review', track_id=track_id)
+    services.remove_playlist(repo.repo_instance, track_id, playlist_id)
 
-    
-
-    if cursor + reviews_per_page < len(reviews):
-        # There are further articles, so generate URLs for the 'next' and 'last' navigation buttons.
-        next_review_url = url_for('info_bp.review', track_id=track_id, cursor=cursor + reviews_per_page)
-    
-        last_cursor = reviews_per_page * int(len(reviews) / reviews_per_page)
-        if len(reviews) % reviews_per_page == 0:
-            last_cursor -= reviews_per_page
-        last_review_url = url_for('info_bp.review', track_id=track_id, cursor=last_cursor)
-    
-
-    return render_template ('review.html', 
-    track=track,
-    user=user,
-    sesh=sesh,
-    form=form, 
-    reviews = reviews_to_be_displayed,
-    leng = len(reviews),
-    prev_track_url = prev_review_url,
-    first_track_url = first_review_url,
-    next_track_url = next_review_url,
-    last_track_url = last_review_url
-    )
-
-
-
-class ProfanityFree:
-    def __init__(self, message=None):
-        if not message:
-            message = u'Field must not contain profanity'
-        self.message = message
-
-    def __call__(self, form, field):
-        if profanity.contains_profanity(field.data):
-            raise ValidationError(self.message)
-
-
-class ReviewForm(FlaskForm):
-    rating = SelectField(
-        'Rating',
-        [DataRequired(message="A rating must be selected!"),
-        NumberRange(min=1, max=5, message="select number between 1 and 5")],
-        choices=range(1, 6),
-        coerce=int,
-        default=5)
-    review = TextAreaField('Review', [
-        DataRequired(),
-        Length(min=20, max=2000, message='Please only use between 20 - 2000 characters when writing your review'),
-        ProfanityFree(message='Your comment must not contain profanity')])
-    submit = SubmitField('Submit')
+    return redirect(url_for('user_bp.playlistID', playlist_id=playlist_id)) 

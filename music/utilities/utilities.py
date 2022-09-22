@@ -10,14 +10,29 @@ import music.utilities.services as services
 utilities_blueprint = Blueprint('utilities_bp', __name__)
 
 def create_search_form(repo: AbstractRepository, request_args):
-    """ Returns a MovieSearchForm populated with options from the given repository. """
+    """ Returns a trackSearchForm populated with valid types. """
 
-    form = MovieSearchForm(request_args, meta={'csrf': False})
+    form = trackSearchForm(request_args, meta={'csrf': False})
     form.type.choices = [("query", "Track"), ("artists", "Artists"), ("genres", "Genres"), ("albums", "Albums")] 
 
     return form
 
-class MovieSearchForm(FlaskForm):
+def create_playlist_form(repo: AbstractRepository):
+    """ Returns a MovieSearchForm populated with options from the given repository. """
+
+    form = PlaylistForm()
+    print(repo.get_all_playlist())
+    form.playlist.choices = [(playlist.list_id, playlist.title) for playlist in repo.get_all_playlist()] 
+
+    return form
+
+class trackSearchForm(FlaskForm):
     query = StringField('query')
     type = SelectField('type')
+    submit = SubmitField('Submit')
+
+
+
+class PlaylistForm(FlaskForm):
+    playlist = SelectField('Playlist')
     submit = SubmitField('Submit')

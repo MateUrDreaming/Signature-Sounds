@@ -41,6 +41,9 @@ def get_track_by_id(track_id, repo: AbstractRepository):
     track_as_dict = track_to_dict(track)
     return track_as_dict
 
+def get_track_object_by_id(track_id, repo: AbstractRepository): 
+    return repo.get_track(track_id)
+
 def get_reviews(repo: AbstractRepository, track): 
     if track is None:
         raise NonExistentArticleException
@@ -48,17 +51,41 @@ def get_reviews(repo: AbstractRepository, track):
     reviews = repo.get_reviews(track)
     return reviews
 
-def add_review(repo: AbstractRepository, track, review_text, rating, user:User): 
+def add_review(repo: AbstractRepository, track, review_text, rating, user): 
 
     if track is None:
         raise NonExistentArticleException
     track = repo.get_track(track["id"])
     # Create review.
     review = Review(track, review_text, rating)
+    review.user = user
     # Update the repository.
-    repo.add_review(track, review, user)
+    repo.add_review(track, review)
     user = repo.get_user(user)
     user.add_review(review)
+
+def get_all_reviews(repo: AbstractRepository): 
+    return repo.get_all_reviews()
+
+def add_track_to_likes(repo: AbstractRepository, user: User, track: Track) -> None:
+    """ Adds the given movie to the given user's watchlist. """
+    repo.add_track_to_likes(user, track)
+
+
+def remove_track_from_likes(repo: AbstractRepository, user: User, track: Track) -> None:
+    """ Removes the given movie from the given user's watchlist. """
+    repo.remove_track_from_likes(user, track)
+
+def add_playlist(repo:AbstractRepository, track_id, playlist_id): 
+    track = repo.get_track(int(track_id))
+    playlist = repo.get_playlist_by_id(int(playlist_id))
+    playlist.add_track(track)
+
+def remove_playlist(repo:AbstractRepository, track_id, playlist_id): 
+    track = repo.get_track(int(track_id))
+    playlist = repo.get_playlist_by_id(int(playlist_id))
+    playlist.remove_track(track)
+
 
 
 '''

@@ -11,11 +11,11 @@
         <div class="navbar-nav">
             <a href="{{ url_for('home_bp.home') }}" class="nav-item px-2 primary_text">Home</a>
             <a href="{{ url_for('tracks_bp.search') }}" class="nav-item px-2 primary_text">Track List</a>
-            <a href="#" class="nav-item px-2 primary_text">Reviews</a>
+            <a href="{{ url_for('review_bp.review_board') }}" class="nav-item px-2 primary_text">Reviews</a>
         </div>
         <div class="navbar-nav ml-auto">
             {% if 'user_name' in session %}
-                <a href="{{ url_for('authentication_bp.login') }}"><button type="button" class="btn btn-outline-light me-2 m-1"><i class="fa-solid fa-circle-user"></i> Profile</button></a>
+                <a href="{{ url_for('user_bp.profile') }}"><button type="button" class="btn btn-outline-light me-2 m-1"><i class="fa-solid fa-circle-user"></i> Profile</button></a>
                 <a href="{{ url_for('authentication_bp.logout') }}"><button type="button" class="btn btn-primary m-1">Log-out</button></a>
             {%else%} 
                 <a href="{{ url_for('authentication_bp.login') }}"><button type="button" class="btn btn-outline-light me-2 m-1">Login</button></a>

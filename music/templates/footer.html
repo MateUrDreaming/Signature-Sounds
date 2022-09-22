@@ -8,10 +8,9 @@
         </a>
 
         <ul class="nav col-md-4 justify-content-end">
-        <li class="nav-item"><a href="#" class="nav-link px-2 primary_text">Home</a></li>
-        <li class="nav-item"><a href="#" class="nav-link px-2 primary_text">Reviews</a></li>
-        <li class="nav-item"><a href="#" class="nav-link px-2 primary_text">FAQs</a></li>
-        <li class="nav-item"><a href="#" class="nav-link px-2 primary_text">About</a></li>
+            <li class="nav-item"><a href="{{ url_for('home_bp.home') }}" class="nav-item px-2 primary_text">Home</a></li>
+            <li class="nav-item"><a href="{{ url_for('tracks_bp.search') }}" class="nav-item px-2 primary_text">Track List</a></li>
+            <li class="nav-item"><a href="{{ url_for('review_bp.review_board') }}" class="nav-item px-2 primary_text">Reviews</a></li>           
         </ul>
     </footer>
     </div>

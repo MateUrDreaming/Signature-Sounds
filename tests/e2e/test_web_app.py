@@ -35,14 +35,21 @@ def test_login(client, auth):
     status_code = client.get('/authentication/login').status_code
     assert status_code == 200
 
+    response = client.post(
+        '/authentication/register',
+        data={'user_name': 'noob', 'password': 'Noob1234'}
+    )
+    assert response.headers['Location'] == '/authentication/login'
+
     # Check that a successful login generates a redirect to the homepage.
     response = auth.login()
     assert response.headers['Location'] == '/'
 
+
     # Check that a session has been created for the logged-in user.
     with client:
         client.get('/')
-        assert session['user_name'] == 'thorke'
+        assert session['user_name'] == 'noob'
 
 
 def test_logout(client, auth):

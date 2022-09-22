@@ -19,6 +19,7 @@ class Review:
             raise ValueError('Invalid value for the rating.')
 
         self.__timestamp = datetime.now()
+        self.__user = None
 
     @property
     def track(self) -> Track:
@@ -50,6 +51,18 @@ class Review:
     @property
     def timestamp(self) -> datetime:
         return self.__timestamp
+    
+    @property
+    def user(self) -> datetime:
+        return self.__user
+    
+    @user.setter
+    def user(self, user_name: str):
+        if isinstance(user_name, str):
+            self.__user = user_name
+        else:
+            self.__user = None
+            raise ValueError("invalid user")
 
     def __eq__(self, other):
         if not isinstance(other, self.__class__):

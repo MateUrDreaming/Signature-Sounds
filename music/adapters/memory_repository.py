@@ -10,6 +10,7 @@ from werkzeug.security import generate_password_hash
 
 from music.adapters.repository import AbstractRepository, RepositoryException
 from music.domainmodel.artist import Artist
+from music.domainmodel.playlist import PlayList
 from music.domainmodel.track import Track
 from music.domainmodel.genre import Genre
 from music.domainmodel.review import Review
@@ -29,6 +30,8 @@ class MemoryRepository(AbstractRepository):
         self.__reviews = dict()
         self.__users = list()
         self.__reviews_list = list()
+        self.__playlist_list = []
+        self.__playlist_ids = 0
     
     def add_user(self, user: User):
         self.__users.append(user)
@@ -197,13 +200,11 @@ class MemoryRepository(AbstractRepository):
     def get_tracks(self) -> List[Track]:
         return self.__tracks
     
-    
-    def add_review(self, track, review, user):
+    def add_review(self, track, review):
         if review in self.__reviews_list:
             return
 
-        self.__reviews[track].append((review, user))
-        
+        self.__reviews[track].append(review)
         
         self.__reviews_list.append(review)
 
@@ -211,7 +212,44 @@ class MemoryRepository(AbstractRepository):
         try:
             return self.__reviews[track]
         except KeyError:
-            return [] 
+            return []
+        
+    def add_track_to_likes(self, user: User, track: Track): 
+        user.add_liked_track(track)
+    
+    def remove_track_from_likes(self, user: User, track: Track): 
+        user.remove_liked_track(track)
+
+    def get_all_reviews(self): 
+        return self.__reviews_list 
+    
+    def get_all_liked_tracks(self, user):
+        return user.liked_tracks
+
+    def add_playlist_to_lists(self, user: User, playlist: PlayList): 
+        user.add_playlist(playlist)
+        self.__playlist_list.append(playlist)
+    
+    def remove_playlist_from_lists(self, user: User, playlist: PlayList): 
+        user.remove_playlist(playlist)
+        self.__playlist_list.remove(playlist)
+    
+    def get_user_playlists(self, user):
+        return user.playlist
+
+    def get_playlist_id(self):
+        self.__playlist_ids += 1
+        return self.__playlist_ids
+    
+    def get_all_playlist(self): 
+        return self.__playlist_list
+    
+    def get_playlist_by_id(self, id: int): 
+        playlist = next((playlist for playlist in self.__playlist_list if playlist.list_id == id), None)
+        return playlist
+    
+    def get_user_reviews(self, user): 
+        return user.reviews
 
 def populate(data_path: Path, repo: MemoryRepository):
     """ Populates the given repository using data at the given path. """

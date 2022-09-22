@@ -7,7 +7,7 @@
                     <a class="nav-link active border border-danger border-bottom-0" href="">Information</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link border border-danger border-bottom-0" href="{{ url_for('info_bp.review', track_id=track['id']) }}">Review</a>
+                    <a class="nav-link border border-danger border-bottom-0" href="{{ url_for('review_bp.review', track_id=track['id']) }}">Review</a>
                 </li>
             </ul>
         
@@ -59,6 +59,23 @@
                         <div class="col-10 text-danger"><a href="{{track['album'].album_url}}" class="link_text">{{track['album'].album_url}}</a></div>
                     </div>
                     <hr style="border-top: 1px solid white;">
+                    {% if 'user_name' in session %}
+                    <div class="row justify-content-center">
+                        <div class="col text-center">
+                        <form action="{{ url_for('info_bp.liked', track_id=track['id']) }}" method="post">
+                            <button type="submit" class="btn btn-danger"><i class="{{ 'fa-solid fa-heart-crack' if object in user.liked_tracks else 'fa-solid fa-heart' }}"></i></button></span>
+                        </form>
+                        </div>
+                        <div class="col-lg text-center">
+                            <form action="{{ url_for('info_bp.add_to_playlist', track_id=track['id']) }}" method="post">
+                                {{ form.csrf_token }} 
+                                {{ form.playlist(class='selectpicker show-tick ', id="inputGroupSelect01", **{'data-style':'btn-danger-outline', 'data-live-search':'true'}) }}
+                                {{form.submit(class="btn btn-primary")}}
+                            </form>
+                        </div>
+                    </div>
+
+                    {% endif %}
                 </div>
             </div>
         

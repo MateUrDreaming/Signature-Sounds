@@ -7,6 +7,7 @@ from music.domainmodel.genre import Genre
 from music.domainmodel.review import Review
 from music.domainmodel.album import Album
 from music.domainmodel.user import User
+from music.domainmodel.playlist import PlayList
 from music.adapters.csvdatareader import TrackCSVReader
 
 repo_instance = None
@@ -150,6 +151,58 @@ class AbstractRepository(abc.ABC):
     
     @abc.abstractmethod
     def get_reviews(self):
+        """ Returns the Reviews stored in the repository for a specified track."""
+        raise NotImplementedError
+    
+    @abc.abstractmethod
+    def get_all_reviews(self): 
         """ Returns the Reviews stored in the repository."""
         raise NotImplementedError
 
+    @abc.abstractmethod
+    def add_track_to_likes(self, user, track ):
+        """ Adds track to users liked tracks."""
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def remove_track_from_likes(self, user, track ):
+        """ Remove track to users liked tracks."""
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_all_liked_tracks(self, user):
+        """ Returns all liked tracks of a specified user."""
+        raise NotImplementedError
+    
+    @abc.abstractmethod
+    def add_playlist_to_lists(self, user: User, playlist: PlayList):
+        """ Returns all liked tracks of a specified user."""
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def remove_playlist_from_lists(self, user: User, playlist: PlayList):
+        """ Returns all liked tracks of a specified user."""
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_user_playlists(self, user):
+        """ Returns all liked tracks of a specified user."""
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_playlist_id(self):
+        """ Returns all liked tracks of a specified user."""
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_all_playlist(self): 
+        """ Returns all liked tracks of a specified user."""
+        raise NotImplementedError
+    
+    def get_playlist_by_id(self, id: int): 
+        """ Returns the playlist specified by the id."""
+        raise NotImplementedError
+    
+    def get_user_reviews(self, user: User): 
+        """ Returns all reviews made by a user"""
+        raise NotImplementedError

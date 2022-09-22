@@ -1,0 +1,55 @@
+{% extends 'layout.html' %} {% block content %}
+<div class="container mt-5 w-75">
+    <div class="card bg-dark text-light">
+        <div class="container h-100 py-2">
+            <ul class="nav nav-tabs border-0" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link  border border-danger border-bottom-0" href="{{ url_for('user_bp.profile') }}">Liked tracks</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link border active border-danger border-bottom-0" href="#">Playlists</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link border border-danger border-bottom-0" href="{{ url_for('user_bp.review') }}">Review</a>
+                </li>
+            </ul>
+        
+            <div class="tab-content h-75">
+                <div class="tab-pane h-100 p-3 active border border-danger">
+                    <h1 class="heading_text m-2 profile-icon"><i class="fa-solid fa-headphones"></i></h1>
+                    <h1 class="title heading_text mb-2">Playlists</h1>
+                    <br>
+                    <div class="col text-center">
+                        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"> Create playlist </button>
+                    </div>
+                    <div class="collapse" id="collapseExample">
+                        <form method="POST" action="{{ url_for('user_bp.playlists') }}">
+                        {{ form.csrf_token }} <!-- Need to include this token - Flask WTForms requires it. -->
+                            <div class="m-2">
+                                {{ form.playlist(class="form-control") }}
+                            </div>
+                            {{ form.submit(class="btn btn-primary m-2 form-control")}}
+                        </form>
+                        {% if form.errors %}
+                        <ul>
+                        {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+                        {% for error in field_errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                    </div>
+                    <br>
+                    <hr style="border-top: 1px solid white;">
+                    {% if leng == 0 %} <p class="text-center text-danger">You currently have no Playlists!</p> {% endif %}
+                    {%for playlist in playlists %}
+                        <a href=" {{ url_for('user_bp.playlistID', playlist_id = playlist.list_id) }} "><p class="link_text font-weight-bold">{{playlist.title}}: {{playlist.size()}} tracks</p> </a>
+                    {% endfor %}	
+                    <hr style="border-top: 1px solid white;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -44,6 +44,12 @@ def create_app(test_config=None):
         from .utilities import utilities
         app.register_blueprint(utilities.utilities_blueprint)
 
+        from .tracks import review
+        app.register_blueprint(review.review_blueprint)
+
+        from .user import user
+        app.register_blueprint(user.user_blueprint)
+
         app.register_error_handler(404, page_not_found)
 
     return app
