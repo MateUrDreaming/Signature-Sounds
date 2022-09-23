@@ -1,5 +1,6 @@
 from music.domainmodel.review import Review
 from music.domainmodel.track import Track
+from music.domainmodel.playlist import PlayList
 
 
 class User:
@@ -21,6 +22,7 @@ class User:
 
         self.__reviews: list[Review] = []
         self.__liked_tracks: list[Track] = []
+        self.__playlist: list[PlayList] = []
 
     @property
     def user_id(self) -> int:
@@ -44,7 +46,9 @@ class User:
         self.__reviews.append(new_review)
 
     def remove_review(self, review: Review):
+        print('remove')
         if not isinstance(review, Review) or review not in self.__reviews:
+            print('wtf')
             return
         self.__reviews.remove(review)
 
@@ -61,6 +65,20 @@ class User:
         if not isinstance(track, Track) or track not in self.__liked_tracks:
             return
         self.__liked_tracks.remove(track)
+    
+    @property
+    def playlist(self) -> list:
+        return self.__playlist
+
+    def add_playlist(self, new_playlist: PlayList):
+        if not isinstance(new_playlist, PlayList) or new_playlist in self.__playlist:
+            return
+        self.__playlist.append(new_playlist)
+
+    def remove_playlist(self, playlist: PlayList):
+        if not isinstance(playlist, PlayList) or playlist not in self.__playlist:
+            return
+        self.__playlist.remove(playlist)
 
     def __repr__(self):
         return f'<User {self.user_name}, user id = {self.user_id}>'

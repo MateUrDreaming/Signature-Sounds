@@ -7,6 +7,7 @@ from music.domainmodel.genre import Genre
 from music.domainmodel.review import Review
 from music.domainmodel.album import Album
 from music.domainmodel.user import User
+from music.domainmodel.playlist import PlayList
 from music.adapters.csvdatareader import TrackCSVReader
 
 
@@ -673,6 +674,40 @@ class TestUser:
         user1.remove_review(928)
         user1.remove_review('review')
         assert user1.reviews == [review3]
+    
+    def test_playlist(self): 
+        #Establish playlist can function as anticipated
+        play_list = PlayList(1, "Playlist1")
+        assert play_list.size() == 0
+        track1 = Track(2, 'Heat Waves')
+        play_list.add_track(track1)
+        play_list.add_track(Track(10, 'Bad Habit'))
+        play_list.add_track(Track(1, 'Shivers'))
+        assert play_list.first_track_in_list() == track1
+        play_list.remove_track(track1)
+        assert play_list.size() == 2
+        assert play_list.select_track_to_listen(play_list.size()-1) == Track(1, 'Shivers')
+
+        #removing non-existent track
+        play_list2 = PlayList(2, "Playlist2")
+        play_list2.add_track(Track(2, 'Heat Waves'))
+        play_list2.add_track(Track(10, 'Bad Habit'))
+        play_list2.remove_track(Track(1, 'Shivers'))
+        assert play_list2.size() == 2
+
+        assert play_list != play_list2
+
+        user1 = User(7232, 'gavi', 'gavi9281')
+        assert len(user1.playlist) == 0
+        user1.add_playlist(play_list)
+        assert len(user1.playlist) == 1
+        user1.add_playlist(play_list2)
+        assert len(user1.playlist) == 2
+        user1.add_playlist('playlist')
+        assert len(user1.playlist) == 2
+        user1.remove_playlist(play_list2)
+        user1.remove_playlist(play_list2)
+        assert len(user1.playlist) == 1
 
 
 def create_csv_reader():

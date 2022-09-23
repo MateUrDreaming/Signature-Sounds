@@ -1,0 +1,68 @@
+{% extends 'layout.html' %} {% block content %}
+<div class="container mt-3 mb-md-3 w-75">
+    <div class="card bg-dark text-light">
+        <div class="container h-100 py-2">
+            <ul class="nav nav-tabs border-0" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link border border-danger border-bottom-0" href="{{ url_for('info_bp.track', track_id=track['id']) }}">Information</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link border active border-danger border-bottom-0" href="">Review</a>
+                </li>
+            </ul>
+        
+            <div class="tab-content h-75">
+                <div class="tab-pane h-100 p-3 active border border-danger">
+                    {% include 'page_btns.html' %}
+                    <h2 class="text-center">Review </h2>
+                        <hr style="border-top: 1px solid white;">
+                        {% if leng == 0 %} 
+                            <h5 class="text-danger text-center ">No reviews have been posted for the track '{{track['title']}}'</h5> 
+                            <hr style="border-top: 1px solid white;">
+                        {%endif %}
+                        
+                        {%for review in reviews %}
+                            <strong class="text-danger">{{review.user}} on {{review.timestamp.strftime("%d %B, %Y")}}</strong>  
+                            <p>{{review.review_text}}</p>
+                            <span class="text-danger">Rating: </span>{%for rating in range(review.rating) %} <i class="fa-solid fa-star text-danger"></i>{% endfor %}
+                            <hr style="border-top: 1px solid white;"> 
+                        {% endfor %}
+
+                        {% if 'user_name' in session %}
+                        <div class="col text-center">
+                            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                                Add a review
+                            </button>
+                        </div>
+                        <div class="collapse" id="collapseExample">
+                            <form method="POST" action="{{ url_for('review_bp.review', track_id=track['id']) }}">
+                            {{ form.csrf_token }} <!-- Need to include this token - Flask WTForms requires it. -->
+                                <div class="m-2">
+                                    {{ form.rating.label }}<br>
+                                    {{ form.rating(class="form-control") }}
+                                </div>
+                                <div class="m-2">
+                                    {{ form.review.label }}<br>
+                                    {{ form.review(class="form-control")}}
+                                </div>
+                                {{ form.submit(class="btn btn-primary m-2 form-control")}}
+                            </form>
+                            
+                    {%endif %}
+                    </div>
+                    {% if form.errors %}
+                        <ul>
+                        {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+                        {% for error in field_errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

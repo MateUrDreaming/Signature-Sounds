@@ -1,0 +1,44 @@
+{% extends 'layout.html' %} {% block content %}
+<div class="container mt-5 w-75">
+    <div class="card bg-dark text-light">
+        <div class="container h-100 py-2">
+            <ul class="nav nav-tabs border-0" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active border border-danger border-bottom-0" href="#">Liked tracks</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link border border-danger border-bottom-0" href="{{ url_for('user_bp.playlists') }}">Playlists</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link border border-danger border-bottom-0" href="{{ url_for('user_bp.review') }}">Review</a>
+                </li>
+            </ul>
+        
+            <div class="tab-content h-75">
+                <div class="tab-pane h-100 p-3 active border border-danger">
+                    <h1 class="heading_text m-2 profile-icon"><i class="fa-solid fa-headphones"></i></h1>
+                    {% include 'page_btns.html' %}
+                    <h1 class="title heading_text mb-2">Liked tracks</h1>
+                    {% if leng == 0 %} <p class="text-center text-danger">You currently have no liked tracks!</p> {% endif %}
+                    <hr style="border-top: 1px solid white;"> 
+                    <div class="mt-2">
+                        {%for track in liked_tracks %}
+                            <a href="{{ url_for('info_bp.track', track_id=track.track_id) }}" style="float:left;"><strong class="text-danger row ml-2">{{track.title}} by {{track.artist.full_name}}</strong>
+                            <strong class="text-white row ml-2">{{track.track_duration}} seconds</strong></a>
+                            <div style="float: right;">
+                                <form action="{{ url_for('info_bp.liked', track_id=track.track_id) }}" method="post">
+                                    <button type="submit" class="btn btn-danger"><i class="{{ 'fa-solid fa-heart-crack' if track in liked_tracks else 'fa-solid fa-heart' }}"></i></button></span>
+                                </form>
+                            </div>
+                            <br>
+                            <br>
+                            <hr style="border-top: 1px solid white;"> 
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+    </div>
+</div>
+{% endblock %}

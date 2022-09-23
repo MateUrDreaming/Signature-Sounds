@@ -1,0 +1,61 @@
+{% extends 'layout.html' %} 
+
+{% block content %}
+
+{% include 'search.html' %}
+<div class="container">
+    {%if total_leng == 0%} 
+    <img class="col-md-3 row mt-3 mx-auto" src="/static/images/dark.png">
+    <p class="mt-2 mb-3 text-center text-muted">No search results found, try again!
+
+    {% else %} 
+    <p class="mt-2 mb-3 text-center text-muted">Showing results {{cursor+1}} - {{cursor+leng}} out of {{total_leng}}</p>
+    
+    {% include 'page_btns.html' %}
+
+    <table class="table table-hover align-middle mb-2 mt-2 bg-white">
+        <thead class="bg-light">
+        <tr>
+            <th>Track</th>
+            <th>Artist</th>
+            <th>Album</th>
+            <th>Genres</th>
+            <!--<th>Actions</th>-->
+        </tr>
+        </thead>
+        <tbody>
+        {% for track in tracks %}
+            <tr>
+                <td>
+                <div class="d-flex align-items-center">
+                    <div class="ms-3">
+                        <a href="{{ url_for('info_bp.track', track_id=track['id']) }}" class="link_text"><p class="fw-bold mb-1 d-inline-block text-truncate" style="max-width: 10rem;">{{track['title']}}</p></a>
+                        <p class="text-muted mb-0">{{track['duration']}} seconds </p>
+                    </div>
+                </div>
+                </td>
+                <td>
+                    <a href="{{ url_for('tracks_bp.search', type='artists', query=track['artist']) }}" class="link_text"><p class="d-inline-block text-truncate" style="max-width: 7rem;">{{track['artist']}}</p></a>
+                </td>
+                <td>
+                    <div class="d-flex align-items-center">
+                        <div class="ms-3">
+                            <a href="{{ url_for('tracks_bp.search', type='albums', query=track['album'].title) }}" class="link_text"><strong><p class="fw-bold mb-1 d-inline-block text-truncate" style="max-width: 11rem;">{{track['album'].title}}</p></strong></a>
+                            <strong><p class="text-muted mb-0">Released in {{track['album'].release_year}}</p></strong>
+                        </div>
+                    </div>
+                </td>
+                <td class="" style="min-width: 10rem; max-width: 10rem;">
+                {% for genre in track['genres'] %}
+                <a href="{{ url_for('tracks_bp.search', type='genres', query=genre.name) }}"><span class="badge badge-danger">{{genre.name}}</span></a>
+                {% endfor %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <hr>
+    {% include 'page_btns.html' %}
+    {%endif%}
+</div>
+{% endblock %}

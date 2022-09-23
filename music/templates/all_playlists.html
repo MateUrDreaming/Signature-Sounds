@@ -1,0 +1,26 @@
+{% extends 'layout.html' %} {% block content %}
+<div class="container mt-3 mb-md-3 w-75">
+    <div class="card bg-dark text-light">
+        <div class="container h-100 py-2">
+            <h1 class="heading_text m-2 profile-icon"><i class="fa-solid fa-headphones"></i></h1>
+            {% include 'page_btns.html' %}
+            <h1 class="title heading_text">Public Playlists</h1>
+            {% if leng == 0 %} <p class="text-center text-danger">There are currently no public playlists!</p> {% endif %}
+            <hr style="border-top: 1px solid white;"> 
+            {%for playlist in playlists %}
+            <div class="row">
+                <a href=" {{ url_for('user_bp.playlistID', playlist_id = playlist.list_id) }} " class="col"><p class="link_text font-weight-bold">{{playlist.title}}: {{playlist.size()}} tracks by {{playlist.user}}</p> </a> 
+                <div class="col d-flex flex-row-reverse">
+                    {% if user and playlist not in user.playlist%}
+                    <form action="{{ url_for('user_bp.add_public_playlist', playlist_id = playlist.list_id) }}" method="post">
+                        <button type="submit" class="btn btn-danger"><i class="fa-solid fa-plus"></i></button></span>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+            <hr style="border-top: 1px solid white;">
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
