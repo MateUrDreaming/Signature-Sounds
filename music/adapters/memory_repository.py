@@ -201,6 +201,7 @@ class MemoryRepository(AbstractRepository):
         return self.__tracks
     
     def add_review(self, track, review):
+        if not isinstance(review, Review): return
         if review in self.__reviews_list:
             return
 
@@ -215,7 +216,8 @@ class MemoryRepository(AbstractRepository):
             return []
         
     def add_track_to_likes(self, user: User, track: Track): 
-        user.add_liked_track(track)
+        if isinstance(track, Track):
+            user.add_liked_track(track)
     
     def remove_track_from_likes(self, user: User, track: Track): 
         user.remove_liked_track(track)
@@ -227,13 +229,16 @@ class MemoryRepository(AbstractRepository):
         return user.liked_tracks
 
     def add_playlist_to_lists(self, user: User, playlist: PlayList): 
-        user.add_playlist(playlist)
-        self.__playlist_list.append(playlist)
+        if isinstance(playlist, PlayList):
+            user.add_playlist(playlist)
+            if playlist not in self.__playlist_list:
+                self.__playlist_list.append(playlist)
     
     def remove_playlist_from_lists(self, user, playlist: PlayList): 
-        for user in self.__users: 
-            if playlist in user.playlist: user.remove_playlist(playlist)
-        self.__playlist_list.remove(playlist)
+        if isinstance(playlist, PlayList):
+            for user in self.__users: 
+                if playlist in user.playlist: user.remove_playlist(playlist)
+            self.__playlist_list.remove(playlist)
     
     def get_user_playlists(self, user):
         return user.playlist
