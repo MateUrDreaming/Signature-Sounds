@@ -18,6 +18,8 @@
                 <div class="tab-pane h-100 p-3 active border border-danger">
                     <h1 class="heading_text m-2 profile-icon"><i class="fa-solid fa-headphones"></i></h1>
                     <h1 class="title heading_text mb-2">Playlists</h1>
+                    {% include 'page_btns.html' %}
+                    <br>
                     <br>
                     <div class="col text-center">
                         <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"> Create playlist </button>
@@ -44,9 +46,18 @@
                     <hr style="border-top: 1px solid white;">
                     {% if leng == 0 %} <p class="text-center text-danger">You currently have no Playlists!</p> {% endif %}
                     {%for playlist in playlists %}
-                        <a href=" {{ url_for('user_bp.playlistID', playlist_id = playlist.list_id) }} "><p class="link_text font-weight-bold">{{playlist.title}}: {{playlist.size()}} tracks</p> </a>
-                    {% endfor %}	
+                    <div class="row">
+                        <a href=" {{ url_for('user_bp.playlistID', playlist_id = playlist.list_id) }} " class="col"><p class="link_text font-weight-bold">{{playlist.title}}: {{playlist.size()}} tracks</p> </a>
+                        <div class="col d-flex flex-row-reverse">
+                            {% if user and playlist.user == user.user_name %}
+                            <form action="{{ url_for('user_bp.delete_playlist', playlist_id = playlist.list_id) }}" method="post">
+                                <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button></span>
+                            </form>
+                            {%endif%}
+                        </div>
+                    </div>
                     <hr style="border-top: 1px solid white;">
+                    {% endfor %}	
                 </div>
             </div>
         </div>

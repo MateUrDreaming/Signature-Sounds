@@ -198,11 +198,18 @@ class AbstractRepository(abc.ABC):
     def get_all_playlist(self): 
         """ Returns all liked tracks of a specified user."""
         raise NotImplementedError
-    
+
+    @abc.abstractmethod
     def get_playlist_by_id(self, id: int): 
         """ Returns the playlist specified by the id."""
         raise NotImplementedError
-    
+
+    @abc.abstractmethod
     def get_user_reviews(self, user: User): 
         """ Returns all reviews made by a user"""
+        raise NotImplementedError
+        
+    @abc.abstractmethod
+    def get_visible_playlists(self): 
+        """ Returns all visible playlists"""
         raise NotImplementedError

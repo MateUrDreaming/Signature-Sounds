@@ -38,12 +38,16 @@ def search():
     else:
         # Convert cursor from string to int.
         cursor = int(cursor)
+
     
-    cursor = (cursor // tracks_per_page) * 25
 
     # Retrieve track ids for tracks that are associated with the query.
     track_ids = services.get_track_ids_for_query(query, type, repo.repo_instance)
-    #print(track_ids)
+    
+    if cursor < 0 or cursor > len(track_ids): cursor = 0
+    
+    cursor = (cursor // tracks_per_page) * 25
+
     # Retrieve the batch of tracls to display on the Web page.
     tracks = services.get_tracks_by_id(track_ids[cursor:cursor + tracks_per_page], repo.repo_instance)
     
@@ -80,3 +84,4 @@ def search():
         leng = len(tracks),
         form = utilities.create_search_form(repo, request.args)
     )
+

@@ -5,7 +5,8 @@
             <h1 class="heading_text m-2 profile-icon"><i class="fa-solid fa-comment-dots"></i></h1>
             {% include 'page_btns.html' %}
             <h1 class="title heading_text">Review board</h1>
-            
+            {% if leng == 0 %} <p class="text-center text-danger">There are currently no reviews made!</p> {% endif %}
+            <hr style="border-top: 1px solid white;"> 
             {%for review in reviews %}
                 <strong class="text-danger" style="float: left;">{{review.user}} on {{review.timestamp.strftime("%d %B, %Y")}}</strong>  
                 <strong class="text-white" style="float: right;"><a class="link_text" href="{{ url_for('info_bp.track', track_id=review.track.track_id) }}">{{review.track.title}}</a></strong>  

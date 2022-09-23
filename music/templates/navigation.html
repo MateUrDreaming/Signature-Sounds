@@ -12,6 +12,7 @@
             <a href="{{ url_for('home_bp.home') }}" class="nav-item px-2 primary_text">Home</a>
             <a href="{{ url_for('tracks_bp.search') }}" class="nav-item px-2 primary_text">Track List</a>
             <a href="{{ url_for('review_bp.review_board') }}" class="nav-item px-2 primary_text">Reviews</a>
+            <a href="{{ url_for('user_bp.public_playlists') }}" class="nav-item px-2 primary_text">Playlists</a>
         </div>
         <div class="navbar-nav ml-auto">
             {% if 'user_name' in session %}

@@ -24,3 +24,18 @@ def get_user_playlists(repo: AbstractRepository, user: User):
 
 def get_user_reviews(user, repo): 
     return repo.get_user_reviews(user)
+
+def remove_playlist(repo:AbstractRepository, user: User, playlist_id): 
+    play_list = repo.get_playlist_by_id(playlist_id)
+    repo.remove_playlist_from_lists(user, play_list)
+
+def change_visibility(repo, user, playlist_id): 
+    playlist = repo.get_playlist_by_id(int(playlist_id))
+    playlist.switch_visibility()
+
+def get_all_playlists(repo: AbstractRepository): 
+    return repo.get_visible_playlists()
+
+def add_public_playlist(repo: AbstractRepository,user: User, playlist_id): 
+    playlist = repo.get_playlist_by_id(int(playlist_id))
+    user.add_playlist(playlist)

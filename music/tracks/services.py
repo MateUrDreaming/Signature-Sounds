@@ -76,12 +76,12 @@ def remove_track_from_likes(repo: AbstractRepository, user: User, track: Track) 
     """ Removes the given movie from the given user's watchlist. """
     repo.remove_track_from_likes(user, track)
 
-def add_playlist(repo:AbstractRepository, track_id, playlist_id): 
+def add_to_playlist(repo:AbstractRepository, track_id, playlist_id): 
     track = repo.get_track(int(track_id))
     playlist = repo.get_playlist_by_id(int(playlist_id))
     playlist.add_track(track)
 
-def remove_playlist(repo:AbstractRepository, track_id, playlist_id): 
+def remove_from_playlist(repo:AbstractRepository, track_id, playlist_id): 
     track = repo.get_track(int(track_id))
     playlist = repo.get_playlist_by_id(int(playlist_id))
     playlist.remove_track(track)

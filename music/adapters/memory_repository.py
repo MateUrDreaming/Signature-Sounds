@@ -230,8 +230,9 @@ class MemoryRepository(AbstractRepository):
         user.add_playlist(playlist)
         self.__playlist_list.append(playlist)
     
-    def remove_playlist_from_lists(self, user: User, playlist: PlayList): 
-        user.remove_playlist(playlist)
+    def remove_playlist_from_lists(self, user, playlist: PlayList): 
+        for user in self.__users: 
+            if playlist in user.playlist: user.remove_playlist(playlist)
         self.__playlist_list.remove(playlist)
     
     def get_user_playlists(self, user):
@@ -250,6 +251,9 @@ class MemoryRepository(AbstractRepository):
     
     def get_user_reviews(self, user): 
         return user.reviews
+    
+    def get_visible_playlists(self): 
+        return [playlist for playlist in self.__playlist_list if playlist.is_public == True]
 
 def populate(data_path: Path, repo: MemoryRepository):
     """ Populates the given repository using data at the given path. """

@@ -109,7 +109,7 @@ def add_to_playlist(track_id: Union[int, None]):
     form = create_playlist_form(repo.repo_instance)
     if form.validate_on_submit():
         # Use the service layer to store the new review.
-        services.add_playlist(repo.repo_instance, track_id, form.playlist.data)
+        services.add_to_playlist(repo.repo_instance, track_id, form.playlist.data)
         # Reload the page to show the new review
         return redirect(url_for('info_bp.track', track_id=track_id))
 
@@ -136,6 +136,6 @@ def remove_playlist(playlist_id, track_id):
         session.clear()
         abort(404)
     
-    services.remove_playlist(repo.repo_instance, track_id, playlist_id)
+    services.remove_from_playlist(repo.repo_instance, track_id, playlist_id)
 
     return redirect(url_for('user_bp.playlistID', playlist_id=playlist_id)) 

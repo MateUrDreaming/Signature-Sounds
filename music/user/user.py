@@ -15,7 +15,7 @@ from music.utilities.utilities import PlaylistForm
 
 user_blueprint = Blueprint('user_bp', __name__)
 
-    
+#Fix cursor
 @user_blueprint.route('/user/liked_tracks', methods=['GET'])
 @login_required
 def profile():
@@ -50,9 +50,14 @@ def profile():
         # Convert cursor from string to int.
         cursor = int(cursor)
     
-    tracks_to_be_displayed = tracks[cursor:cursor + tracks_per_page]
+    if cursor < 0:
+        cursor = 0
+    elif cursor > len(tracks):
+        cursor = 0
 
+    #Change for the remaining
     cursor = (cursor // tracks_per_page) * tracks_per_page
+    tracks_to_be_displayed = tracks[cursor:cursor + tracks_per_page]
     
     if cursor > 0:
         # There are preceding articles, so generate URLs for the 'previous' and 'first' navigation buttons.
@@ -72,6 +77,7 @@ def profile():
     
     return render_template("profile.html", 
     user=user, 
+    leng = len(tracks),
     liked_tracks = tracks_to_be_displayed, 
     prev_track_url = prev_track_url,
     first_track_url = first_track_url,
@@ -84,6 +90,12 @@ def profile():
 def playlists():
     user=None
     sesh = False
+    first_track_url = None
+    last_track_url = None
+    next_track_url = None
+    prev_track_url = None
+    playlists_per_page = 3
+
     try:
         user = auth.get_user_object(session['user_name'], repo.repo_instance)
         sesh = True
@@ -100,6 +112,19 @@ def playlists():
         abort(404)
     
     playlists = services.get_user_playlists(repo.repo_instance, user)
+    cursor = request.args.get('cursor')
+
+    if cursor is None:
+        # No cursor query parameter, so initialise cursor to start at the beginning.
+        cursor = 0
+    else:
+        # Convert cursor from string to int.
+        cursor = int(cursor)
+    
+    if cursor < 0:
+        cursor = 0
+    elif cursor > len(playlists):
+        cursor = 0
 
     form = PlaylistForm()
     if form.validate_on_submit() and sesh:
@@ -107,17 +132,40 @@ def playlists():
         services.add_playlist(repo.repo_instance, form.playlist.data, user)
         # Reload the page to show the new review
         return redirect(url_for('user_bp.playlists'))
+
+    cursor = (cursor // playlists_per_page) * playlists_per_page
+    playlists_to_be_displayed = playlists[cursor:cursor + playlists_per_page]
+    
+    if cursor > 0:
+        # There are preceding articles, so generate URLs for the 'previous' and 'first' navigation buttons.
+        prev_track_url = url_for('user_bp.playlists', cursor=cursor - playlists_per_page)
+        first_track_url = url_for('user_bp.playlists')
+
+    
+
+    if cursor + playlists_per_page < len(playlists):
+        # There are further articles, so generate URLs for the 'next' and 'last' navigation buttons.
+        next_track_url = url_for('user_bp.playlists', cursor=cursor + playlists_per_page)
+    
+        last_cursor = playlists_per_page * int(len(playlists) / playlists_per_page)
+        if len(playlists) % playlists_per_page == 0:
+            last_cursor -= playlists_per_page
+        last_track_url = url_for('user_bp.playlists', cursor=last_cursor)
     
     return render_template ('playlists.html', 
     user=user,
-    playlists = playlists,
+    playlists = playlists_to_be_displayed,
     form=form, 
-    leng = len(playlists)
+    leng = len(playlists),
+    first_track_url = first_track_url,
+    next_track_url = next_track_url, 
+    prev_track_url = prev_track_url,
+    last_track_url = last_track_url
     )
 
-@user_blueprint.route('/user/playlists/<int:playlist_id>', methods=['GET'])
-@login_required
+@user_blueprint.route('/playlists/<int:playlist_id>', methods=['GET'])
 def playlistID(playlist_id: int):
+    user = None
     try:
         user = auth.get_user_object(session['user_name'], repo.repo_instance)
     except ValueError:
@@ -137,6 +185,7 @@ def playlistID(playlist_id: int):
     else: leng = 0
 
     return render_template ('playlistid.html', 
+    user = user,
     leng = leng,
     playlist = playlist
     )
@@ -176,34 +225,185 @@ def review():
         # Convert cursor from string to int.
         cursor = int(cursor)
     
-    reviews_to_be_displayed = reviews[cursor:cursor + reviews_per_page]
-
+    if cursor < 0:
+        cursor = 0
+    elif cursor > len(reviews):
+        cursor = 0
+    
     cursor = (cursor // reviews_per_page) * reviews_per_page
+    reviews_to_be_displayed = reviews[cursor:cursor + reviews_per_page]
     
     if cursor > 0:
         # There are preceding articles, so generate URLs for the 'previous' and 'first' navigation buttons.
-        prev_review_url = url_for('user_bp.profile', cursor=cursor - reviews_per_page)
-        first_review_url = url_for('user_bp.profile')
+        prev_review_url = url_for('user_bp.review', cursor=cursor - reviews_per_page)
+        first_review_url = url_for('user_bp.review')
 
     
 
     if cursor + reviews_per_page < len(reviews):
         # There are further articles, so generate URLs for the 'next' and 'last' navigation buttons.
-        next_review_url = url_for('user_bp.profile', cursor=cursor + reviews_per_page)
+        next_review_url = url_for('user_bp.review', cursor=cursor + reviews_per_page)
     
         last_cursor = reviews_per_page * int(len(reviews) / reviews_per_page)
         if len(reviews) % reviews_per_page == 0:
             last_cursor -= reviews_per_page
-        last_review_url = url_for('user_bp.profile', cursor=last_cursor)
+        last_review_url = url_for('user_bp.review', cursor=last_cursor)
     
     return render_template("userReview.html", 
     user=user, 
     reviews = reviews_to_be_displayed, 
+    leng = len(reviews),
     prev_track_url = prev_review_url,
     first_track_url = first_review_url,
     next_track_url = next_review_url,
     last_track_url = last_review_url,
     )
+
+@user_blueprint.route('/user/deleteplaylist/<int:playlist_id>', methods=['POST'])
+@login_required
+def delete_playlist(playlist_id: int):
+    user=None
+    sesh = False
+    try:
+        user = auth.get_user_object(session['user_name'], repo.repo_instance)
+        sesh = True
+    except ValueError:
+        # No user with the given username
+        pass
+    except KeyError:
+        # No active session, anonymous/guest user
+        abort(404)
+        
+    except auth.UnknownUserException:
+        # Invalid session
+        session.clear()
+        abort(404)
+
+    if user and sesh: 
+        services.remove_playlist(repo.repo_instance, user, int(playlist_id))
+    else: abort(404)
+    
+    return redirect(url_for('user_bp.playlists'))
+
+@user_blueprint.route('/user/changevisibility/<int:playlist_id>', methods=['POST'])
+@login_required
+def changevisibility(playlist_id: int):
+    user=None
+    sesh = False
+    try:
+        user = auth.get_user_object(session['user_name'], repo.repo_instance)
+        sesh = True
+    except ValueError:
+        # No user with the given username
+        pass
+    except KeyError:
+        # No active session, anonymous/guest user
+        abort(404)
+        
+    except auth.UnknownUserException:
+        # Invalid session
+        session.clear()
+        abort(404)
+    
+    if user and sesh: 
+        services.change_visibility(repo.repo_instance, user, int(playlist_id))
+    else: abort(404)
+    
+    return redirect(url_for('user_bp.playlistID', playlist_id=playlist_id))
+
+@user_blueprint.route('/public_playlists', methods=['GET'])
+def public_playlists():
+    user=None
+    first_track_url = None
+    last_track_url = None
+    next_track_url = None
+    prev_track_url = None
+    playlists_per_page = 5
+ 
+    try:
+        user = auth.get_user_object(session['user_name'], repo.repo_instance)
+    except ValueError:
+        # No user with the given username
+        pass
+    except KeyError:
+        # No active session, anonymous/guest user
+        pass
+    except auth.UnknownUserException:
+        # Invalid session
+        session.clear()
+    
+    playlists = services.get_all_playlists(repo.repo_instance)
+    cursor = request.args.get('cursor')
+
+    if cursor is None:
+        # No cursor query parameter, so initialise cursor to start at the beginning.
+        cursor = 0
+    else:
+        # Convert cursor from string to int.
+        cursor = int(cursor)
+    
+    if cursor > 0:
+        cursor = 0
+    elif cursor < len(playlists):
+        cursor = 0
+    
+    
+    cursor = (cursor // playlists_per_page) * playlists_per_page
+    playlists_to_be_displayed = playlists[cursor:cursor + playlists_per_page]
+    
+    if cursor > 0:
+        # There are preceding articles, so generate URLs for the 'previous' and 'first' navigation buttons.
+        prev_track_url = url_for('user_bp.public_playlists', cursor=cursor - playlists_per_page)
+        first_track_url = url_for('user_bp.public_playlists')
+
+    
+
+    if cursor + playlists_per_page < len(playlists):
+        # There are further articles, so generate URLs for the 'next' and 'last' navigation buttons.
+        next_track_url = url_for('user_bp.public_playlists', cursor=cursor + playlists_per_page)
+    
+        last_cursor = playlists_per_page * int(len(playlists) / playlists_per_page)
+        if len(playlists) % playlists_per_page == 0:
+            last_cursor -= playlists_per_page
+        last_track_url = url_for('user_bp.public_playlists', cursor=last_cursor)
+    
+    
+    return render_template("all_playlists.html", 
+    user=user, 
+    playlists = playlists_to_be_displayed, 
+    leng = len(playlists), 
+    first_track_url = first_track_url,
+    prev_track_url = prev_track_url,
+    next_track_url = next_track_url,
+    last_track_url = last_track_url
+    )
+
+@user_blueprint.route('/user/add_public_playlist/<int:playlist_id>', methods=['POST'])
+@login_required
+def add_public_playlist(playlist_id: int):
+    user=None
+    sesh = False
+    try:
+        user = auth.get_user_object(session['user_name'], repo.repo_instance)
+        sesh = True
+    except ValueError:
+        # No user with the given username
+        pass
+    except KeyError:
+        # No active session, anonymous/guest user
+        abort(404)
+        
+    except auth.UnknownUserException:
+        # Invalid session
+        session.clear()
+        abort(404)
+    
+    if user and sesh: 
+        services.add_public_playlist(repo.repo_instance, user, int(playlist_id))
+    else: abort(404)
+    
+    return redirect(url_for('user_bp.playlistID', playlist_id=playlist_id))
+
 
 class ProfanityFree:
     def __init__(self, message=None):

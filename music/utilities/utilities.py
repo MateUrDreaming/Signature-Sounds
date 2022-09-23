@@ -21,7 +21,6 @@ def create_playlist_form(repo: AbstractRepository):
     """ Returns a MovieSearchForm populated with options from the given repository. """
 
     form = PlaylistForm()
-    print(repo.get_all_playlist())
     form.playlist.choices = [(playlist.list_id, playlist.title) for playlist in repo.get_all_playlist()] 
 
     return form
