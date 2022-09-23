@@ -109,7 +109,7 @@ def test_review(client, auth):
     )
 
     # Check that a successful login generates a redirect to the homepage.
-    response = auth.login()
+    auth.login()
 
     response = client.post(
         '/review/2',
@@ -139,3 +139,155 @@ def test_review_with_invalid_input(client, auth, review, rating, messages):
     # Check that supplying invalid comment text generates appropriate error messages.
     for message in messages:
         assert message in response.data
+    
+def test_track_info_page(client):
+    response = client.get('/track/2')
+    assert response.status_code == 200
+    assert b'Food' in response.data
+    assert b'Review' in response.data
+
+
+def test_review_board(client, auth): 
+    response = client.post(
+        '/authentication/register',
+        data={'user_name': 'noob', 'password': 'Noob1234'}
+    )
+
+    # Check that a successful login generates a redirect to the homepage.
+    response = auth.login()
+
+    response1 = client.post(
+        '/review/2',
+        data={'review': 'this represents review 1 which is valid.', 'rating': '3'}
+    )
+    response2 = client.post(
+        '/review/2',
+        data={'review': 'this represents another review 1 which is valid.', 'rating': '3'}
+    )
+
+    response = client.get('/review/2')
+    assert b"this represents review 1 which is valid" in response.data
+    assert b"this represents another review 1 which is valid" in response.data
+
+    response = client.get('/review_board/')
+    assert response.status_code == 200
+    assert b"Food" in response.data
+    assert b"noob" in response.data
+    assert b"this represents review 1 which is valid" in response.data
+
+#Test liking and removing liked tracks
+def test_liking_tracks(client, auth): 
+    response = client.post(
+        '/authentication/register',
+        data={'user_name': 'noob', 'password': 'Noob1234'}
+    )
+
+    # Check that a successful login generates a redirect to the homepage.
+    response = auth.login()
+
+    response1 = client.post('/track/liked/2')
+    assert response1.status_code == 302
+
+    response2 = client.get('/user/liked_tracks')
+    assert response2.status_code == 200
+    assert b"Food by AWOL" in response2.data
+
+    response1 = client.post('/track/liked/2')
+    assert response1.status_code == 302
+    response2 = client.get('/user/liked_tracks')
+    assert b"You currently have no liked tracks!" in response2.data
+
+def test_invalid_page(client): 
+    response = client.get('/user/liked_tracks')
+    assert response.status_code == 302
+    assert b"login" in response.data
+
+    response = client.get('/public_playlists/1')
+    assert response.status_code == 404
+    assert b"404 Error" in response.data
+
+def test_playlist(client, auth): 
+    response = client.post(
+        '/authentication/register',
+        data={'user_name': 'noob', 'password': 'Noob1234'}
+    )
+
+    # Check that a successful login generates a redirect to the homepage.
+    response = auth.login()
+
+    #create a new playlist called `hello`
+    response = client.post(
+        '/user/playlists',
+        data={'playlist': 'hello'}
+    )
+
+    #check if playlist is on the page
+    assert response.status_code == 302
+    response = client.get('/user/playlists')
+    assert response.status_code == 200
+    assert b"hello" in response.data
+    
+
+    #create a new playlist with a NAUGHTY WORD :OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+    response = client.post(
+        '/user/playlists',
+        data={'playlist': 'cock in the barbie'}
+    )
+    assert b"Your name must not contain profanity" in response.data
+    
+    #check if specified playlist generates appropriate view
+    response = client.get('/playlists/1')
+    assert b"hello" in response.data
+    assert b"private" in response.data
+    #Change playlist to public and then back to private
+    response = client.post('/user/changevisibility/1')
+    response = client.get('/playlists/1')
+    assert b"hello" in response.data
+    assert b"public" in response.data
+    response = client.post('/user/changevisibility/1')
+    response = client.get('/playlists/1')
+    assert b"hello" in response.data
+    assert b"private" in response.data
+    #add tracks to playlist
+    response = client.post(
+        '/playlist/2',
+        data={'playlist': '1'}
+    )
+    assert response.status_code == 302
+    response = client.post(
+        '/playlist/3',
+        data={'playlist': '1'}
+    )
+    response = client.get('/playlists/1')
+    assert b"Food" in response.data
+    assert b"Electric" in response.data
+    #remove from playlist
+    response = client.get('/user/playlists')
+    assert b"2" in response.data #2 tracks in currently
+    response = client.post('/user/1/2')
+    assert response.status_code == 302
+    response = client.get('/user/playlists')
+    assert b"1" in response.data #1 track after Food was removed D:
+
+    #See playlist in public fourm
+    response = client.post('/user/changevisibility/1')
+    response = client.get('/public_playlists')
+    assert response.status_code == 200
+    assert b"hello" in response.data
+    #add another playlist
+    response = client.post(
+        '/user/playlists',
+        data={'playlist': 'euphoria'}
+    )
+    assert response.status_code == 302
+    response = client.get('/user/playlists')
+    assert response.status_code == 200
+    assert b"hello" in response.data
+    assert b"euphoria" in response.data
+    #delete playlist
+    response = client.post('/user/deleteplaylist/1')
+    assert response.status_code == 302
+    response = client.get('/user/playlists')
+    assert response.status_code == 200
+    assert b"hello" not in response.data #Because hello got deleted!
+    assert b"euphoria" in response.data
