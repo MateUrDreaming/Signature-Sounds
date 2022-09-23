@@ -100,3 +100,42 @@ def test_track_info_page(client):
     assert response.status_code == 200
     assert b'Food' in response.data
     assert b'Review' in response.data
+
+
+def test_review(client, auth): 
+    response = client.post(
+        '/authentication/register',
+        data={'user_name': 'noob', 'password': 'Noob1234'}
+    )
+
+    # Check that a successful login generates a redirect to the homepage.
+    response = auth.login()
+
+    response = client.post(
+        '/review/2',
+        data={'review': 'noobs are very cool and very special.', 'rating': '4'}
+    )
+    assert response.headers['Location'] == '/review/2'
+    
+@pytest.mark.parametrize(('review', 'rating','messages'), (
+    ('Who thinks Trump is a f***wit?', '4',(b'Your comment must not contain profanity')),
+    ('Hey', '5',(b'Please only use between 20 - 2000 characters when writing your review')),
+    ('hello, i am under the water, how are you?', '10',(b'select number between 1 and 5')),
+))
+def test_review_with_invalid_input(client, auth, review, rating, messages):
+    response = client.post(
+        '/authentication/register',
+        data={'user_name': 'noob', 'password': 'Noob1234'}
+    )
+    # Login a user.
+    auth.login()
+
+    # Attempt to comment on an article.
+    response = client.post(
+        '/comment',
+        data={'review': review, 'rating': rating}
+    )
+
+    # Check that supplying invalid comment text generates appropriate error messages.
+    for message in messages:
+        assert message in response.data
