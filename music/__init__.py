@@ -2,7 +2,12 @@
 from pathlib import Path
 from flask import Flask, render_template
 
+# imports from SQLAlchemy
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, clear_mappers
+from sqlalchemy.pool import NullPool
 
+#Import adapter repositories
 import music.adapters.repository as repo
 from music.adapters.memory_repository import MemoryRepository, populate
 
@@ -21,10 +26,16 @@ def create_app(test_config=None):
         app.config.from_mapping(test_config)
         data_path = app.config['TEST_DATA_PATH']
     
-    # Create the MemoryRepository implementation for a memory-based repository.
-    repo.repo_instance = MemoryRepository()
-    # fill the content of the repository from the provided csv files
-    populate(data_path, repo.repo_instance)
+    # Here the "magic" of our repository pattern happens. We can easily switch between in memory data and
+    # persistent database data storage for our application.
+
+    if app.config['REPOSITORY'] == 'memory':
+        # Create the MemoryRepository implementation for a memory-based repository.
+        repo.repo_instance = MemoryRepository()
+        # fill the content of the repository from the provided csv files (has to be done every time we start app!)
+        database_mode = False
+        # fill the content of the repository from the provided csv files
+        populate(data_path, repo.repo_instance)
     
     # Build the application - these steps require an application context.
     with app.app_context():
