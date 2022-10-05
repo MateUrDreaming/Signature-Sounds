@@ -260,12 +260,12 @@ class MemoryRepository(AbstractRepository):
     def get_visible_playlists(self): 
         return [playlist for playlist in self.__playlist_list if playlist.is_public == True]
 
-def populate(data_path: Path, repo: MemoryRepository):
+def populate(data_path: Path, repo: MemoryRepository, database_mode=False):
     """ Populates the given repository using data at the given path. """
     dirname = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     albums_file_name = os.path.join(dirname, 'adapters/data/raw_albums_excerpt.csv')
     tracks_file_name = os.path.join(dirname, 'adapters/data/raw_tracks_excerpt.csv')
-    reader = TrackCSVReader(albums_file_name, tracks_file_name)
+    reader = TrackCSVReader(albums_file_name, tracks_file_name, database_mode)
     reader.read_csv_files()
 
     for track in reader.dataset_of_tracks:
