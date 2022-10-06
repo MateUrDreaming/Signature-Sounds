@@ -57,8 +57,7 @@ def create_app(test_config=None):
         # Create the database session factory using sessionmaker (this has to be done once, in a global manner)
         session_factory = sessionmaker(autocommit=False, autoflush=True, bind=database_engine)
         # Create the SQLAlchemy DatabaseRepository instance for an sqlite3-based repository.
-        #repo.repo_instance = SqlAlchemyRepository(session_factory)
-
+        repo.repo_instance = SqlAlchemyRepository(session_factory)
         if app.config['TESTING'] == 'True' or len(database_engine.table_names()) == 0:
             print("REPOPULATING DATABASE...")
             # For testing, or first-time use of the web application, reinitialise the database.
@@ -71,7 +70,7 @@ def create_app(test_config=None):
             map_model_to_tables()
 
             database_mode = True
-            #populate_two(data_path, repo.repo_instance, database_mode)
+            populate_two(data_path, repo.repo_instance, database_mode)
             print("REPOPULATING DATABASE... FINISHED")
 
         else:
