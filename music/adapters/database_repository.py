@@ -1,7 +1,7 @@
 from datetime import date
 from typing import List
 
-from sqlalchemy import desc, asc
+from sqlalchemy import desc, asc, func
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 
 from sqlalchemy.orm import scoped_session
@@ -111,27 +111,40 @@ class SqlAlchemyRepository(AbstractRepository):
         return number_of_tracks
 
     def get_all_track_ids(self): 
-         # return self.__tracks_index.keys()
-        track_ids = self._session_cm.session.query(Track._Track__id).all()
-        return track_ids
+        track_ids = self._session_cm.session.query(Track).all()
+        return [track.track_id for track in track_ids]
 
     def get_tracks_by_id(self, id_list):
-        tracks = self._session_cm.session.query(Track).filter(Track._Track__id.in_(id_list)).all()
+        tracks = self._session_cm.session.query(Track).filter(Track._Track__track_id.in_(id_list)).all()
         return tracks
     
     def get_track_ids_for_titles(self, key: str):
-        pass
-
-    def get_track_ids_for_artist(self, artist_name: str):
         # Get first occurrence of artist with artist_name.
-        artist = self._session_cm.session.query(Artist).filter(Artist._Artist__full_name.lower() == artist_name.lower()).one()
+        check_title = self._session_cm.session.query(Track).filter(Track._Track__title.ilike("%"+key+"%")).first()
 
-        if artist is not None:
+        if check_title is not None:
             track_ids = list()
             tracks = self._session_cm.session.query(Track).all()
             for track in tracks:
-                if (track.artist.full_name).lower().find(artist_name.lower()) != -1:
+                if (track.title).lower().find(key.lower()) != -1:
                     track_ids.append(track.track_id)
+        else:
+            # No Artist with name artist_name, so return an empty list.
+            track_ids = list()
+        
+        return track_ids
+
+    def get_track_ids_for_artist(self, artist_name: str):
+        # Get first occurrence of artist with artist_name.
+        check_artist = self._session_cm.session.query(Artist).filter(Artist._Artist__full_name.ilike("%"+artist_name+"%")).first()
+
+        if check_artist is not None:
+            track_ids = list()
+            tracks = self._session_cm.session.query(Track).all()
+            for track in tracks:
+                if track.artist:
+                    if (track.artist.full_name).lower().find(artist_name.lower()) != -1:
+                        track_ids.append(track.track_id)
         else:
             # No Artist with name artist_name, so return an empty list.
             track_ids = list()
@@ -140,9 +153,12 @@ class SqlAlchemyRepository(AbstractRepository):
     
     def get_track_ids_for_genre(self, genre_name: str):
         # Get first occurrence of genre with genre_name.
-        genre = self._session_cm.session.query(Genre).filter(Genre._Genre__name.lower() == genre_name.lower()).one()
+        try: 
+            check_genre = self._session_cm.session.query(Genre).filter(func.lower(Genre._Genre__name) == func.lower(genre_name)).one()
+        except NoResultFound: check_genre = None
 
-        if genre is not None:
+
+        if check_genre is not None:
             track_ids = list()
             tracks = self._session_cm.session.query(Track).all()
             for track in tracks:
@@ -157,14 +173,15 @@ class SqlAlchemyRepository(AbstractRepository):
     
     def get_track_ids_for_album(self, album_name: str):
         # Get first occurrence of album with album_name.
-        album = self._session_cm.session.query(Album).filter(Album._Album__title.lower() == album_name.lower()).one()
-
-        if album is not None:
+        check_album = self._session_cm.session.query(Album).filter(Album._Album__title.ilike("%"+album_name+"%")).first()
+        
+        if check_album is not None:
             track_ids = list()
             tracks = self._session_cm.session.query(Track).all()
             for track in tracks:
-                if (track.album.title).lower().find(album_name.lower()) != -1:
-                    track_ids.append(track.track_id)
+                if track.album:
+                    if (track.album.title).lower().find(album_name.lower()) != -1:
+                        track_ids.append(track.track_id)
         else:
             # No Album with name album_name, so return an empty list.
             track_ids = list()

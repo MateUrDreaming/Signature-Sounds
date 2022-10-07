@@ -1,6 +1,6 @@
 from datetime import datetime
 from sqlalchemy import (
-    Table, MetaData, Column, Integer, String, Date, DateTime,
+    Table, MetaData, Column, Integer, String, Date, DateTime, Boolean,
     ForeignKey, func
 )
 from sqlalchemy.orm import mapper, relationship, synonym
@@ -71,6 +71,26 @@ reviews_table = Table(
     Column('rating', Integer)
 )
 
+liked_tracks_table = Table(
+    'liked_tracks', metadata,
+    Column('user', ForeignKey('users.id')),
+    Column('track_id', Integer, ForeignKey('tracks.track_id'))
+)
+
+playlist_table = Table(
+    'playlists', metadata,
+    Column('playlist_id', Integer, primary_key=True, autoincrement=True),
+    Column('title', String(255), nullable=False),
+    Column('user', ForeignKey('users.user_name')),
+    Column('is_public', Boolean, nullable = False),
+)
+
+user_playlist_table = Table(
+    'user_playlists', metadata,
+    Column('track_id', ForeignKey('tracks.track_id')),
+    Column('playlist_id', Integer, ForeignKey('playlists.playlist_id'))
+)
+
 
 def map_model_to_tables():
     mapper(User, users_table, properties={
@@ -115,3 +135,10 @@ def map_model_to_tables():
         '_Review__rating': reviews_table.c.rating
     })
 
+    mapper(PlayList, playlist_table, properties={
+        '_Playlist__playlist_id': playlist_table.c.playlist_id,
+        '_Playlist__user': playlist_table.c.title,
+        '_Playlist__user': relationship(User),
+        '_Playlist__list_of_tracks': relationship(PlayList, secondary=user_playlist_table),
+        '_Playlist__is_public': playlist_table.c.is_public
+    })
