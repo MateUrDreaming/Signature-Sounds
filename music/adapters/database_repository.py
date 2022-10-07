@@ -64,13 +64,23 @@ class SqlAlchemyRepository(AbstractRepository):
         self._session_cm.reset_session()
 
     def add_user(self, user: User):
-        pass
+        with self._session_cm as scm:
+            scm.session.add(user)
+            scm.commit()
 
     def get_user(self, user_name) -> User:
-        pass
+        user = None
+        try:
+            user = self._session_cm.session.query(User).filter(User._User__user_name == user_name).one()
+        except NoResultFound:
+            # Ignore any exception and return None.
+            pass
+
+        return user
 
     def get_number_of_users(self) -> int:
-        pass
+        number_of_users = self._session_cm.session.query(User).count()
+        return number_of_users
 
     def add_track(self, track: Track):
         with self._session_cm as scm:
@@ -78,37 +88,106 @@ class SqlAlchemyRepository(AbstractRepository):
             scm.commit()
     
     def get_track(self, id: int) -> Track:
-        pass
+        track = None
+        try:
+            track = self._session_cm.session.query(Track).filter(Track._Track__id == id).one()
+        except NoResultFound:
+            # Ignore any exception and return None.
+            pass
+
+        return track
     
     def get_tracks_by_artist(self, target_artist: Artist) -> List[Track]:
-        pass
+        if target_artist is None:
+            tracks = self._session_cm.session.query(Track).all()
+            return tracks
+        else:
+            # Return tracks matching target_artist; return an empty list if there are no matches.
+            tracks = self._session_cm.session.query(Track).filter(Track._Track__artist == target_artist).all()
+            return tracks
     
     def get_number_of_tracks(self) -> int:
-        pass
+        number_of_tracks = self._session_cm.session.query(Track).count()
+        return number_of_tracks
 
     def get_all_track_ids(self): 
-        pass
+         # return self.__tracks_index.keys()
+        track_ids = self._session_cm.session.query(Track._Track__id).all()
+        return track_ids
 
     def get_tracks_by_id(self, id_list):
-        pass
+        tracks = self._session_cm.session.query(Track).filter(Track._Track__id.in_(id_list)).all()
+        return tracks
     
     def get_track_ids_for_titles(self, key: str):
         pass
 
     def get_track_ids_for_artist(self, artist_name: str):
-        pass
+        # Get first occurrence of artist with artist_name.
+        artist = self._session_cm.session.query(Artist).filter(Artist._Artist__full_name.lower() == artist_name.lower()).one()
+
+        if artist is not None:
+            track_ids = list()
+            tracks = self._session_cm.session.query(Track).all()
+            for track in tracks:
+                if (track.artist.full_name).lower().find(artist_name.lower()) != -1:
+                    track_ids.append(track.track_id)
+        else:
+            # No Artist with name artist_name, so return an empty list.
+            track_ids = list()
+        
+        return track_ids
     
     def get_track_ids_for_genre(self, genre_name: str):
-        pass
+        # Get first occurrence of genre with genre_name.
+        genre = self._session_cm.session.query(Genre).filter(Genre._Genre__name.lower() == genre_name.lower()).one()
+
+        if genre is not None:
+            track_ids = list()
+            tracks = self._session_cm.session.query(Track).all()
+            for track in tracks:
+                for genre in track.genres:
+                    if (genre.name).lower() == genre_name.lower():
+                        track_ids.append(track.track_id)
+        else:
+            # No Genre with name genre_name, so return an empty list.
+            track_ids = list()
+        
+        return track_ids
     
     def get_track_ids_for_album(self, album_name: str):
-        pass
+        # Get first occurrence of album with album_name.
+        album = self._session_cm.session.query(Album).filter(Album._Album__title.lower() == album_name.lower()).one()
+
+        if album is not None:
+            track_ids = list()
+            tracks = self._session_cm.session.query(Track).all()
+            for track in tracks:
+                if (track.album.title).lower().find(album_name.lower()) != -1:
+                    track_ids.append(track.track_id)
+        else:
+            # No Album with name album_name, so return an empty list.
+            track_ids = list()
+        
+        return track_ids
 
     def get_tracks_by_genre(self, target_genre: Genre) -> List[Track]:
-        pass
+        if target_genre is None:
+            tracks = self._session_cm.session.query(Track).all()
+            return tracks
+        else:
+            # Return tracks matching target_genre; return an empty list if there are no matches.
+            tracks = self._session_cm.session.query(Track).filter(target_genre in Track._Track__genres).all()
+            return tracks
     
     def get_tracks_by_album(self, target_album: Album) -> List[Track]:
-        pass
+        if target_album is None:
+            tracks = self._session_cm.session.query(Track).all()
+            return tracks
+        else:
+            # Return tracks matching target_album; return an empty list if there are no matches.
+            tracks = self._session_cm.session.query(Track).filter(Track._Track__album == target_album).all()
+            return tracks
 
     def add_genre(self, genre: Genre):
         with self._session_cm as scm:
@@ -116,7 +195,8 @@ class SqlAlchemyRepository(AbstractRepository):
             scm.commit()
     
     def get_genres(self) -> List[Genre]:
-        pass
+        genres = self._session_cm.session.query(Genre).all()
+        return genres
     
     def add_artist(self, artist: Artist):
         with self._session_cm as scm:
@@ -124,7 +204,8 @@ class SqlAlchemyRepository(AbstractRepository):
             scm.commit()
     
     def get_artists(self) -> List[Artist]:
-        pass
+        artists = self._session_cm.session.query(Artist).all()
+        return artists
     
     def add_album(self, album: Album):
         with self._session_cm as scm:
@@ -132,16 +213,23 @@ class SqlAlchemyRepository(AbstractRepository):
             scm.commit()
     
     def get_albums(self) -> List[Album]:
-        pass
+        albums = self._session_cm.session.query(Album).all()
+        return albums
     
     def get_tracks(self) -> List[Track]:
-        pass
+        tracks = self._session_cm.session.query(Track).all()
+        return tracks
     
     def add_review(self, track, review):
-        pass
+        if not isinstance(review, Review): return
+        with self._session_cm as scm:
+            scm.session.add(review)
+            scm.commit()
 
     def get_reviews(self, track):
-        pass
+        # Get reviews of a particular Track.
+        reviews = self._session_cm.session.query(Review).filter(Review._Review__track == track).all()
+        return reviews
         
     def add_track_to_likes(self, user: User, track: Track): 
         pass
@@ -150,7 +238,8 @@ class SqlAlchemyRepository(AbstractRepository):
         pass
 
     def get_all_reviews(self): 
-        pass
+        reviews = self._session_cm.session.query(Review).all()
+        return reviews
     
     def get_all_liked_tracks(self, user):
         pass
@@ -174,7 +263,9 @@ class SqlAlchemyRepository(AbstractRepository):
         pass
     
     def get_user_reviews(self, user): 
-        pass
+        # Get reviews from a particular User.
+        reviews = self._session_cm.session.query(Review).filter(Review._Review__user == user).all()
+        return reviews
     
     def get_visible_playlists(self): 
         pass
