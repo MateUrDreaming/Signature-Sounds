@@ -96,6 +96,9 @@ def map_model_to_tables():
     mapper(User, users_table, properties={
         '_User__user_name': users_table.c.user_name,
         '_User__password': users_table.c.password,
+        '_User__liked_tracks': relationship(Track, secondary=liked_tracks_table),
+        '_User__playlist': relationship(PlayList, backref='_Playlist__user'),
+        '_User__reviews': relationship(Review, backref='_Review__user')
     })
 
     mapper(Artist, artist_table, properties={
@@ -128,7 +131,7 @@ def map_model_to_tables():
 
     
     mapper(Review, reviews_table, properties={
-        '_Review__user': relationship(User),
+        #'_Review__user': relationship(User),
         '_Review__track': relationship(Track),
         '_Review__review_text': reviews_table.c.review_text,
         '_Review__timestamp': reviews_table.c.rating,
@@ -137,8 +140,8 @@ def map_model_to_tables():
 
     mapper(PlayList, playlist_table, properties={
         '_Playlist__playlist_id': playlist_table.c.playlist_id,
-        '_Playlist__user': playlist_table.c.title,
-        '_Playlist__user': relationship(User),
+        '_Playlist__title': playlist_table.c.title,
+        #'_Playlist__user': relationship(User),
         '_Playlist__list_of_tracks': relationship(PlayList, secondary=user_playlist_table),
         '_Playlist__is_public': playlist_table.c.is_public
     })
