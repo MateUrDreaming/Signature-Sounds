@@ -1,4 +1,6 @@
+from curses.ascii import US
 from datetime import date
+from re import U
 from typing import List
 
 from sqlalchemy import desc, asc, func
@@ -75,7 +77,6 @@ class SqlAlchemyRepository(AbstractRepository):
         except NoResultFound:
             # Ignore any exception and return None.
             pass
-
         return user
 
     def get_number_of_users(self) -> int:
@@ -90,7 +91,7 @@ class SqlAlchemyRepository(AbstractRepository):
     def get_track(self, id: int) -> Track:
         track = None
         try:
-            track = self._session_cm.session.query(Track).filter(Track._Track__id == id).one()
+            track = self._session_cm.session.query(Track).filter(Track._Track__track_id == id).one()
         except NoResultFound:
             # Ignore any exception and return None.
             pass
@@ -249,35 +250,44 @@ class SqlAlchemyRepository(AbstractRepository):
         return reviews
         
     def add_track_to_likes(self, user: User, track: Track): 
-        pass
+        with self._session_cm as scm:
+            user.add_liked_track(track)
+            scm.session.commit()
     
     def remove_track_from_likes(self, user: User, track: Track): 
-        pass
+        with self._session_cm as scm:
+            user.remove_liked_track(track)
+            scm.session.commit()
 
     def get_all_reviews(self): 
         reviews = self._session_cm.session.query(Review).all()
         return reviews
     
-    def get_all_liked_tracks(self, user):
-        pass
+    def get_all_liked_tracks(self, user: User):
+        return user.liked_tracks
 
     def add_playlist_to_lists(self, user: User, playlist: PlayList): 
-        pass
+        with self._session_cm as scm:
+            scm.session.add(playlist)
+            scm.session.commit()
     
     def remove_playlist_from_lists(self, user, playlist: PlayList): 
         pass
     
     def get_user_playlists(self, user):
-        pass
+        return user.playlist
 
     def get_playlist_id(self):
-        pass
+        count = self._session_cm.session.query(PlayList).count()
+        return count + 1
     
     def get_all_playlist(self): 
-        pass
+        playlists = self._session_cm.session.query(PlayList).all()
+        return playlists
     
     def get_playlist_by_id(self, id: int): 
-        pass
+        playlist = self._session_cm.session.query(PlayList).filter(PlayList._Playlist__list_id == id).first()
+        return playlist
     
     def get_user_reviews(self, user): 
         # Get reviews from a particular User.

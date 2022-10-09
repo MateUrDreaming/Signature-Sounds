@@ -58,10 +58,11 @@ def add_review(repo: AbstractRepository, track, review_text, rating, user):
     track = repo.get_track(track["id"])
     # Create review.
     review = Review(track, review_text, rating)
+    user = repo.get_user(user)
     review.user = user
+    
     # Update the repository.
     repo.add_review(track, review)
-    user = repo.get_user(user)
     user.add_review(review)
 
 def get_all_reviews(repo: AbstractRepository): 

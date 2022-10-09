@@ -13,8 +13,9 @@ def get_all_liked_tracks(user, repo: AbstractRepository):
 def add_playlist(repo: AbstractRepository, title: str, user: User): 
     id = repo.get_playlist_id()
     play_list = PlayList(id, title)
+    play_list.user = user
     repo.add_playlist_to_lists(user, play_list)
-    play_list.user = user.user_name
+    
 
 def get_playlist_by_id(repo: AbstractRepository, id: int): 
     return repo.get_playlist_by_id(id)

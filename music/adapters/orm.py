@@ -63,8 +63,8 @@ track_genre_table = Table(
 
 reviews_table = Table(
     'reviews', metadata,
-    Column('id', Integer, primary_key=True, autoincrement=True),
-    Column('user', ForeignKey('users.user_name')),
+    Column('review_id', Integer, primary_key=True, autoincrement=True),
+    Column('review_user', ForeignKey('users.id')),
     Column('track_id', ForeignKey('tracks.track_id')),
     Column('review_text', String(1024), nullable=False),
     Column('timestamp', DateTime, nullable=False, server_default=func.now()),
@@ -79,21 +79,22 @@ liked_tracks_table = Table(
 
 playlist_table = Table(
     'playlists', metadata,
-    Column('playlist_id', Integer, primary_key=True, autoincrement=True),
+    Column('list_id', Integer, primary_key=True, autoincrement=True),
     Column('title', String(255), nullable=False),
-    Column('user', ForeignKey('users.user_name')),
+    Column('playlist_user', ForeignKey('users.user_name')),
     Column('is_public', Boolean, nullable = False),
 )
 
 user_playlist_table = Table(
     'user_playlists', metadata,
     Column('track_id', ForeignKey('tracks.track_id')),
-    Column('playlist_id', Integer, ForeignKey('playlists.playlist_id'))
+    Column('list_id', Integer, ForeignKey('playlists.list_id'))
 )
 
 
 def map_model_to_tables():
     mapper(User, users_table, properties={
+        '_User__user_id': users_table.c.id,
         '_User__user_name': users_table.c.user_name,
         '_User__password': users_table.c.password,
         '_User__liked_tracks': relationship(Track, secondary=liked_tracks_table),
@@ -131,15 +132,15 @@ def map_model_to_tables():
 
     
     mapper(Review, reviews_table, properties={
-        #'_Review__user': relationship(User),
         '_Review__track': relationship(Track),
         '_Review__review_text': reviews_table.c.review_text,
-        '_Review__timestamp': reviews_table.c.rating,
-        '_Review__rating': reviews_table.c.rating
+        '_Review__rating': reviews_table.c.rating,
+        '_Review__timestamp': reviews_table.c.timestamp
+        
     })
 
     mapper(PlayList, playlist_table, properties={
-        '_Playlist__playlist_id': playlist_table.c.playlist_id,
+        '_Playlist__list_id': playlist_table.c.list_id,
         '_Playlist__title': playlist_table.c.title,
         #'_Playlist__user': relationship(User),
         '_Playlist__list_of_tracks': relationship(PlayList, secondary=user_playlist_table),

@@ -1,3 +1,4 @@
+import imp
 from xmlrpc.client import boolean
 from music.domainmodel.track import Track
 
@@ -38,11 +39,13 @@ class PlayList:
         return self.__user
 
     @user.setter
-    def user(self, username):
-        if type(username) is str and username.strip() != '':
-            self.__user = username.strip()
+    def user(self, user):
+        from music.domainmodel.user import User
+        if isinstance(user, User):
+            self.__user = user
         else:
             self.__user = None
+            raise ValueError("invalid user")
     
     @property
     def is_public(self) -> boolean:
