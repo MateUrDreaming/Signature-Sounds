@@ -306,7 +306,8 @@ class SqlAlchemyRepository(AbstractRepository):
             scm.session.commit()
 
     def get_visible_playlists(self): 
-        pass
+        playlists = self._session_cm.session.query(PlayList).filter(PlayList._Playlist__is_public == False).all()
+        return playlists
 
 def populate_two(data_path: Path, repo: SqlAlchemyRepository, database_mode=False):
     """ Populates the given repository using data at the given path. """
