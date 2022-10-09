@@ -79,16 +79,16 @@ liked_tracks_table = Table(
 
 playlist_table = Table(
     'playlists', metadata,
-    Column('list_id', Integer, primary_key=True, autoincrement=True),
-    Column('title', String(255), nullable=False),
-    Column('playlist_user', ForeignKey('users.user_name')),
-    Column('is_public', Boolean, nullable = False),
+    Column('playlist_id', Integer, primary_key=True, autoincrement=True),
+    Column('playlist_title', String(255), nullable=False),
+    Column('playlist_user', ForeignKey('users.id')),
+    Column('public', Boolean, server_default=u'False'),
 )
 
 user_playlist_table = Table(
     'user_playlists', metadata,
     Column('track_id', ForeignKey('tracks.track_id')),
-    Column('list_id', Integer, ForeignKey('playlists.list_id'))
+    Column('list_id', Integer, ForeignKey('playlists.playlist_id'))
 )
 
 
@@ -129,7 +129,6 @@ def map_model_to_tables():
         '_Genre__genre_id': genre_table.c.genre_id,
         '_Genre__name': genre_table.c.genre
     })
-
     
     mapper(Review, reviews_table, properties={
         '_Review__track': relationship(Track),
@@ -140,9 +139,8 @@ def map_model_to_tables():
     })
 
     mapper(PlayList, playlist_table, properties={
-        '_Playlist__list_id': playlist_table.c.list_id,
-        '_Playlist__title': playlist_table.c.title,
-        #'_Playlist__user': relationship(User),
-        '_Playlist__list_of_tracks': relationship(PlayList, secondary=user_playlist_table),
-        '_Playlist__is_public': playlist_table.c.is_public
+        '_PlayList__list_id': playlist_table.c.playlist_id,
+        '_PlayList__title': playlist_table.c.playlist_title,
+        '_PlayList__list_of_tracks': relationship(Track, secondary=user_playlist_table),
+        '_Playlist__is_public': playlist_table.c.public
     })

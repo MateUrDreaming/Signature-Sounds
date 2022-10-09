@@ -2,6 +2,7 @@ from os import abort
 from typing import List, Iterable
 
 from music.adapters.repository import AbstractRepository
+from music.domainmodel.playlist import PlayList
 from music.domainmodel.review import Review
 from music.domainmodel.track import Track
 from music.domainmodel.artist import Artist
@@ -79,13 +80,15 @@ def remove_track_from_likes(repo: AbstractRepository, user: User, track: Track) 
 
 def add_to_playlist(repo:AbstractRepository, track_id, playlist_id): 
     track = repo.get_track(int(track_id))
-    playlist = repo.get_playlist_by_id(int(playlist_id))
-    playlist.add_track(track)
+    playlist: PlayList = repo.get_playlist_by_id(int(playlist_id))
+    repo.add_track_to_playlist(track, playlist)
+    #playlist.add_track(track)
 
 def remove_from_playlist(repo:AbstractRepository, track_id, playlist_id): 
     track = repo.get_track(int(track_id))
     playlist = repo.get_playlist_by_id(int(playlist_id))
-    playlist.remove_track(track)
+    repo.remove_track_from_playlist(track, playlist)
+    #playlist.remove_track(track)
 
 
 

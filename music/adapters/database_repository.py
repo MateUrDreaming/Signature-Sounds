@@ -95,7 +95,6 @@ class SqlAlchemyRepository(AbstractRepository):
         except NoResultFound:
             # Ignore any exception and return None.
             pass
-
         return track
     
     def get_tracks_by_artist(self, target_artist: Artist) -> List[Track]:
@@ -268,11 +267,13 @@ class SqlAlchemyRepository(AbstractRepository):
 
     def add_playlist_to_lists(self, user: User, playlist: PlayList): 
         with self._session_cm as scm:
-            scm.session.add(playlist)
+            user.add_playlist(playlist)
             scm.session.commit()
     
     def remove_playlist_from_lists(self, user, playlist: PlayList): 
-        pass
+        with self._session_cm as scm:
+            user.add_playlist(playlist)
+            scm.session.commit()
     
     def get_user_playlists(self, user):
         return user.playlist
@@ -286,7 +287,7 @@ class SqlAlchemyRepository(AbstractRepository):
         return playlists
     
     def get_playlist_by_id(self, id: int): 
-        playlist = self._session_cm.session.query(PlayList).filter(PlayList._Playlist__list_id == id).first()
+        playlist = self._session_cm.session.query(PlayList).filter(PlayList._PlayList__list_id == id).first()
         return playlist
     
     def get_user_reviews(self, user): 
@@ -294,6 +295,16 @@ class SqlAlchemyRepository(AbstractRepository):
         reviews = self._session_cm.session.query(Review).filter(Review._Review__user == user).all()
         return reviews
     
+    def add_track_to_playlist(self, track: Track, playlist: PlayList):
+        with self._session_cm as scm:
+            playlist.add_track(track)   
+            scm.session.commit()
+    
+    def remove_track_from_playlist(self, track: Track, playlist: PlayList):
+        with self._session_cm as scm:
+            playlist.remove_track(track)
+            scm.session.commit()
+
     def get_visible_playlists(self): 
         pass
 
