@@ -198,7 +198,7 @@ def test_getting_playlist_by_id(in_memory_repo):
     user_services.add_playlist(in_memory_repo, title, user)
 
     playlist = user_services.get_playlist_by_id(in_memory_repo, 1)
-    assert playlist.user == 'jnlennon'
+    assert playlist.user.user_name == 'jnlennon'
 
 def test_getting_user_playlists(in_memory_repo):
     new_user_name = 'jnlennon'

@@ -98,7 +98,7 @@ def map_model_to_tables():
         '_User__user_name': users_table.c.user_name,
         '_User__password': users_table.c.password,
         '_User__liked_tracks': relationship(Track, secondary=liked_tracks_table),
-        '_User__playlist': relationship(PlayList, backref='_Playlist__user'),
+        '_User__playlist': relationship(PlayList, backref='_PlayList__user'),
         '_User__reviews': relationship(Review, backref='_Review__user')
     })
 
@@ -142,5 +142,5 @@ def map_model_to_tables():
         '_PlayList__list_id': playlist_table.c.playlist_id,
         '_PlayList__title': playlist_table.c.playlist_title,
         '_PlayList__list_of_tracks': relationship(Track, secondary=user_playlist_table),
-        '_Playlist__is_public': playlist_table.c.public
+        '_PlayList__is_public': playlist_table.c.public
     })

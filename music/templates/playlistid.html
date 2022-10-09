@@ -21,7 +21,8 @@
                     {%for track in playlist.tracks %}
                         <a href="{{ url_for('info_bp.track', track_id=track.track_id) }}" style="float:left;"><strong class="text-danger row ml-2">{{track.title}} by {{track.artist.full_name}}</strong>
                         <strong class="text-white row ml-2">{{track.track_duration}} seconds</strong></a>
-                        {% if user and playlist.user == user.user_name%}
+                        
+                        {% if user and playlist.user.user_name == user.user_name%}
                         <div style="float: right;">
                             <form action="{{ url_for('info_bp.remove_playlist', playlist_id=playlist.list_id, track_id=track.track_id) }}" method="post">
                                 <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button></span>
@@ -34,7 +35,7 @@
                         <hr style="border-top: 1px solid white;"> 
                     {% endfor %}
                     <div class="text-center col">
-                        {% if user and playlist.user == user.user_name%}
+                        {% if user and playlist.user.user_name == user.user_name%}
                         <form action="{{ url_for('user_bp.changevisibility', playlist_id=playlist.list_id) }}" method="post">
                             <button type="submit" class="btn btn-danger"><i class="{{ 'fa-solid fa-eye' if playlist.is_public else 'fa-solid fa-eye-slash' }}"></i>
                             {{' public' if playlist.is_public else ' private'}}</button></span>

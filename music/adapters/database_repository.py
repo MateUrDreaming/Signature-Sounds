@@ -272,11 +272,13 @@ class SqlAlchemyRepository(AbstractRepository):
     
     def remove_playlist_from_lists(self, user, playlist: PlayList): 
         with self._session_cm as scm:
-            user.add_playlist(playlist)
+            user.remove_playlist(playlist)
+            scm.session.query(PlayList).filter(PlayList._PlayList__list_id == playlist.list_id).delete()
             scm.session.commit()
     
     def get_user_playlists(self, user):
-        return user.playlist
+        playlists = self._session_cm.session.query(PlayList).filter(PlayList._PlayList__user == user).all()
+        return playlists
 
     def get_playlist_id(self):
         count = self._session_cm.session.query(PlayList).count()
@@ -306,7 +308,7 @@ class SqlAlchemyRepository(AbstractRepository):
             scm.session.commit()
 
     def get_visible_playlists(self): 
-        playlists = self._session_cm.session.query(PlayList).filter(PlayList._Playlist__is_public == False).all()
+        playlists = self._session_cm.session.query(PlayList).filter(PlayList._PlayList__is_public == True).all()
         return playlists
 
 def populate_two(data_path: Path, repo: SqlAlchemyRepository, database_mode=False):

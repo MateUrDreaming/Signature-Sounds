@@ -1,0 +1,1307 @@
+============================= test session starts ==============================
+platform linux -- Python 3.8.10, pytest-7.1.2, pluggy-1.0.0
+rootdir: /home/pkas/projects/git_repos/cs235_2022_assignment-pkas830_hhan941
+collected 95 items
+
+tests/e2e/test_web_app.py .EEEEEEEEEEEEEEEEEE                            [ 20%]
+tests/unit/test_domainmodel.py ........................................  [ 62%]
+tests/unit/test_memory_repository.py .................                   [ 80%]
+tests/unit/test_services.py ...................                          [100%]
+
+==================================== ERRORS ====================================
+_ ERROR at setup of test_register_with_invalid_input[--Your user name is required] _
+
+    @pytest.fixture
+    def client():
+>       my_app = create_app({
+            'TESTING': True,                                # Set to True during testing.
+            'TEST_DATA_PATH': TEST_DATA_PATH,               # Path for loading test data into the repository.
+            'WTF_CSRF_ENABLED': False                       # test_client will not send a CSRF token, so disable validation.
+        })
+
+tests/conftest.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+music/__init__.py:78: in create_app
+    map_model_to_tables()
+music/adapters/orm.py:96: in map_model_to_tables
+    mapper(User, users_table, properties={
+venv/lib/python3.8/site-packages/sqlalchemy/util/deprecations.py:309: in warned
+    return fn(*args, **kwargs)
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:690: in __init__
+    self._configure_class_instrumentation()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Mapper at 0x7fc99d697e80; User>
+
+    def _configure_class_instrumentation(self):
+        """If this mapper is to be a primary mapper (i.e. the
+        non_primary flag is not set), associate this Mapper with the
+        given class and entity name.
+    
+        Subsequent calls to ``class_mapper()`` for the ``class_`` / ``entity``
+        name combination will return this mapper.  Also decorate the
+        `__init__` method on the mapped class to include optional
+        auto-session attachment logic.
+    
+        """
+    
+        # we expect that declarative has applied the class manager
+        # already and set up a registry.  if this is None,
+        # we will emit a deprecation warning below when we also see that
+        # it has no registry.
+        manager = attributes.manager_of_class(self.class_)
+    
+        if self.non_primary:
+            if not manager or not manager.is_mapped:
+                raise sa_exc.InvalidRequestError(
+                    "Class %s has no primary mapper configured.  Configure "
+                    "a primary mapper first before setting up a non primary "
+                    "Mapper." % self.class_
+                )
+            self.class_manager = manager
+            self.registry = manager.registry
+            self._identity_class = manager.mapper._identity_class
+            manager.registry._add_non_primary_mapper(self)
+            return
+    
+        if manager is not None:
+            assert manager.class_ is self.class_
+            if manager.is_mapped:
+                # changed in #7579:
+                # this message is defined in two places as of this change,
+                # also in decl_api -> _add_manager().  in 2.0, this codepath
+                # is removed as any calls to mapper() / Mapper without
+                # the registry setting up first will be rejected.
+>               raise sa_exc.ArgumentError(
+                    "Class '%s' already has a primary mapper defined. "
+                    % self.class_
+                )
+E               sqlalchemy.exc.ArgumentError: Class '<class 'music.domainmodel.user.User'>' already has a primary mapper defined.
+
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:1267: ArgumentError
+_ ERROR at setup of test_register_with_invalid_input[cj--Your user name is too short] _
+
+    @pytest.fixture
+    def client():
+>       my_app = create_app({
+            'TESTING': True,                                # Set to True during testing.
+            'TEST_DATA_PATH': TEST_DATA_PATH,               # Path for loading test data into the repository.
+            'WTF_CSRF_ENABLED': False                       # test_client will not send a CSRF token, so disable validation.
+        })
+
+tests/conftest.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+music/__init__.py:78: in create_app
+    map_model_to_tables()
+music/adapters/orm.py:96: in map_model_to_tables
+    mapper(User, users_table, properties={
+venv/lib/python3.8/site-packages/sqlalchemy/util/deprecations.py:309: in warned
+    return fn(*args, **kwargs)
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:690: in __init__
+    self._configure_class_instrumentation()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Mapper at 0x7fc99d63ffd0; User>
+
+    def _configure_class_instrumentation(self):
+        """If this mapper is to be a primary mapper (i.e. the
+        non_primary flag is not set), associate this Mapper with the
+        given class and entity name.
+    
+        Subsequent calls to ``class_mapper()`` for the ``class_`` / ``entity``
+        name combination will return this mapper.  Also decorate the
+        `__init__` method on the mapped class to include optional
+        auto-session attachment logic.
+    
+        """
+    
+        # we expect that declarative has applied the class manager
+        # already and set up a registry.  if this is None,
+        # we will emit a deprecation warning below when we also see that
+        # it has no registry.
+        manager = attributes.manager_of_class(self.class_)
+    
+        if self.non_primary:
+            if not manager or not manager.is_mapped:
+                raise sa_exc.InvalidRequestError(
+                    "Class %s has no primary mapper configured.  Configure "
+                    "a primary mapper first before setting up a non primary "
+                    "Mapper." % self.class_
+                )
+            self.class_manager = manager
+            self.registry = manager.registry
+            self._identity_class = manager.mapper._identity_class
+            manager.registry._add_non_primary_mapper(self)
+            return
+    
+        if manager is not None:
+            assert manager.class_ is self.class_
+            if manager.is_mapped:
+                # changed in #7579:
+                # this message is defined in two places as of this change,
+                # also in decl_api -> _add_manager().  in 2.0, this codepath
+                # is removed as any calls to mapper() / Mapper without
+                # the registry setting up first will be rejected.
+>               raise sa_exc.ArgumentError(
+                    "Class '%s' already has a primary mapper defined. "
+                    % self.class_
+                )
+E               sqlalchemy.exc.ArgumentError: Class '<class 'music.domainmodel.user.User'>' already has a primary mapper defined.
+
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:1267: ArgumentError
+_ ERROR at setup of test_register_with_invalid_input[test--Your password is required] _
+
+    @pytest.fixture
+    def client():
+>       my_app = create_app({
+            'TESTING': True,                                # Set to True during testing.
+            'TEST_DATA_PATH': TEST_DATA_PATH,               # Path for loading test data into the repository.
+            'WTF_CSRF_ENABLED': False                       # test_client will not send a CSRF token, so disable validation.
+        })
+
+tests/conftest.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+music/__init__.py:78: in create_app
+    map_model_to_tables()
+music/adapters/orm.py:96: in map_model_to_tables
+    mapper(User, users_table, properties={
+venv/lib/python3.8/site-packages/sqlalchemy/util/deprecations.py:309: in warned
+    return fn(*args, **kwargs)
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:690: in __init__
+    self._configure_class_instrumentation()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Mapper at 0x7fc99d4928b0; User>
+
+    def _configure_class_instrumentation(self):
+        """If this mapper is to be a primary mapper (i.e. the
+        non_primary flag is not set), associate this Mapper with the
+        given class and entity name.
+    
+        Subsequent calls to ``class_mapper()`` for the ``class_`` / ``entity``
+        name combination will return this mapper.  Also decorate the
+        `__init__` method on the mapped class to include optional
+        auto-session attachment logic.
+    
+        """
+    
+        # we expect that declarative has applied the class manager
+        # already and set up a registry.  if this is None,
+        # we will emit a deprecation warning below when we also see that
+        # it has no registry.
+        manager = attributes.manager_of_class(self.class_)
+    
+        if self.non_primary:
+            if not manager or not manager.is_mapped:
+                raise sa_exc.InvalidRequestError(
+                    "Class %s has no primary mapper configured.  Configure "
+                    "a primary mapper first before setting up a non primary "
+                    "Mapper." % self.class_
+                )
+            self.class_manager = manager
+            self.registry = manager.registry
+            self._identity_class = manager.mapper._identity_class
+            manager.registry._add_non_primary_mapper(self)
+            return
+    
+        if manager is not None:
+            assert manager.class_ is self.class_
+            if manager.is_mapped:
+                # changed in #7579:
+                # this message is defined in two places as of this change,
+                # also in decl_api -> _add_manager().  in 2.0, this codepath
+                # is removed as any calls to mapper() / Mapper without
+                # the registry setting up first will be rejected.
+>               raise sa_exc.ArgumentError(
+                    "Class '%s' already has a primary mapper defined. "
+                    % self.class_
+                )
+E               sqlalchemy.exc.ArgumentError: Class '<class 'music.domainmodel.user.User'>' already has a primary mapper defined.
+
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:1267: ArgumentError
+_ ERROR at setup of test_register_with_invalid_input[test-test-Your password must be at least 8 characters, and contain an upper case letter, a lower case letter and a digit] _
+
+    @pytest.fixture
+    def client():
+>       my_app = create_app({
+            'TESTING': True,                                # Set to True during testing.
+            'TEST_DATA_PATH': TEST_DATA_PATH,               # Path for loading test data into the repository.
+            'WTF_CSRF_ENABLED': False                       # test_client will not send a CSRF token, so disable validation.
+        })
+
+tests/conftest.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+music/__init__.py:78: in create_app
+    map_model_to_tables()
+music/adapters/orm.py:96: in map_model_to_tables
+    mapper(User, users_table, properties={
+venv/lib/python3.8/site-packages/sqlalchemy/util/deprecations.py:309: in warned
+    return fn(*args, **kwargs)
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:690: in __init__
+    self._configure_class_instrumentation()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Mapper at 0x7fc99d46ddf0; User>
+
+    def _configure_class_instrumentation(self):
+        """If this mapper is to be a primary mapper (i.e. the
+        non_primary flag is not set), associate this Mapper with the
+        given class and entity name.
+    
+        Subsequent calls to ``class_mapper()`` for the ``class_`` / ``entity``
+        name combination will return this mapper.  Also decorate the
+        `__init__` method on the mapped class to include optional
+        auto-session attachment logic.
+    
+        """
+    
+        # we expect that declarative has applied the class manager
+        # already and set up a registry.  if this is None,
+        # we will emit a deprecation warning below when we also see that
+        # it has no registry.
+        manager = attributes.manager_of_class(self.class_)
+    
+        if self.non_primary:
+            if not manager or not manager.is_mapped:
+                raise sa_exc.InvalidRequestError(
+                    "Class %s has no primary mapper configured.  Configure "
+                    "a primary mapper first before setting up a non primary "
+                    "Mapper." % self.class_
+                )
+            self.class_manager = manager
+            self.registry = manager.registry
+            self._identity_class = manager.mapper._identity_class
+            manager.registry._add_non_primary_mapper(self)
+            return
+    
+        if manager is not None:
+            assert manager.class_ is self.class_
+            if manager.is_mapped:
+                # changed in #7579:
+                # this message is defined in two places as of this change,
+                # also in decl_api -> _add_manager().  in 2.0, this codepath
+                # is removed as any calls to mapper() / Mapper without
+                # the registry setting up first will be rejected.
+>               raise sa_exc.ArgumentError(
+                    "Class '%s' already has a primary mapper defined. "
+                    % self.class_
+                )
+E               sqlalchemy.exc.ArgumentError: Class '<class 'music.domainmodel.user.User'>' already has a primary mapper defined.
+
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:1267: ArgumentError
+_ ERROR at setup of test_register_with_invalid_input[gmichael-CarelessWhisper1984-Your user name is already taken - please supply another] _
+
+    @pytest.fixture
+    def client():
+>       my_app = create_app({
+            'TESTING': True,                                # Set to True during testing.
+            'TEST_DATA_PATH': TEST_DATA_PATH,               # Path for loading test data into the repository.
+            'WTF_CSRF_ENABLED': False                       # test_client will not send a CSRF token, so disable validation.
+        })
+
+tests/conftest.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+music/__init__.py:78: in create_app
+    map_model_to_tables()
+music/adapters/orm.py:96: in map_model_to_tables
+    mapper(User, users_table, properties={
+venv/lib/python3.8/site-packages/sqlalchemy/util/deprecations.py:309: in warned
+    return fn(*args, **kwargs)
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:690: in __init__
+    self._configure_class_instrumentation()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Mapper at 0x7fc99d6f2fa0; User>
+
+    def _configure_class_instrumentation(self):
+        """If this mapper is to be a primary mapper (i.e. the
+        non_primary flag is not set), associate this Mapper with the
+        given class and entity name.
+    
+        Subsequent calls to ``class_mapper()`` for the ``class_`` / ``entity``
+        name combination will return this mapper.  Also decorate the
+        `__init__` method on the mapped class to include optional
+        auto-session attachment logic.
+    
+        """
+    
+        # we expect that declarative has applied the class manager
+        # already and set up a registry.  if this is None,
+        # we will emit a deprecation warning below when we also see that
+        # it has no registry.
+        manager = attributes.manager_of_class(self.class_)
+    
+        if self.non_primary:
+            if not manager or not manager.is_mapped:
+                raise sa_exc.InvalidRequestError(
+                    "Class %s has no primary mapper configured.  Configure "
+                    "a primary mapper first before setting up a non primary "
+                    "Mapper." % self.class_
+                )
+            self.class_manager = manager
+            self.registry = manager.registry
+            self._identity_class = manager.mapper._identity_class
+            manager.registry._add_non_primary_mapper(self)
+            return
+    
+        if manager is not None:
+            assert manager.class_ is self.class_
+            if manager.is_mapped:
+                # changed in #7579:
+                # this message is defined in two places as of this change,
+                # also in decl_api -> _add_manager().  in 2.0, this codepath
+                # is removed as any calls to mapper() / Mapper without
+                # the registry setting up first will be rejected.
+>               raise sa_exc.ArgumentError(
+                    "Class '%s' already has a primary mapper defined. "
+                    % self.class_
+                )
+E               sqlalchemy.exc.ArgumentError: Class '<class 'music.domainmodel.user.User'>' already has a primary mapper defined.
+
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:1267: ArgumentError
+_________________________ ERROR at setup of test_login _________________________
+
+    @pytest.fixture
+    def client():
+>       my_app = create_app({
+            'TESTING': True,                                # Set to True during testing.
+            'TEST_DATA_PATH': TEST_DATA_PATH,               # Path for loading test data into the repository.
+            'WTF_CSRF_ENABLED': False                       # test_client will not send a CSRF token, so disable validation.
+        })
+
+tests/conftest.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+music/__init__.py:78: in create_app
+    map_model_to_tables()
+music/adapters/orm.py:96: in map_model_to_tables
+    mapper(User, users_table, properties={
+venv/lib/python3.8/site-packages/sqlalchemy/util/deprecations.py:309: in warned
+    return fn(*args, **kwargs)
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:690: in __init__
+    self._configure_class_instrumentation()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Mapper at 0x7fc99d228a30; User>
+
+    def _configure_class_instrumentation(self):
+        """If this mapper is to be a primary mapper (i.e. the
+        non_primary flag is not set), associate this Mapper with the
+        given class and entity name.
+    
+        Subsequent calls to ``class_mapper()`` for the ``class_`` / ``entity``
+        name combination will return this mapper.  Also decorate the
+        `__init__` method on the mapped class to include optional
+        auto-session attachment logic.
+    
+        """
+    
+        # we expect that declarative has applied the class manager
+        # already and set up a registry.  if this is None,
+        # we will emit a deprecation warning below when we also see that
+        # it has no registry.
+        manager = attributes.manager_of_class(self.class_)
+    
+        if self.non_primary:
+            if not manager or not manager.is_mapped:
+                raise sa_exc.InvalidRequestError(
+                    "Class %s has no primary mapper configured.  Configure "
+                    "a primary mapper first before setting up a non primary "
+                    "Mapper." % self.class_
+                )
+            self.class_manager = manager
+            self.registry = manager.registry
+            self._identity_class = manager.mapper._identity_class
+            manager.registry._add_non_primary_mapper(self)
+            return
+    
+        if manager is not None:
+            assert manager.class_ is self.class_
+            if manager.is_mapped:
+                # changed in #7579:
+                # this message is defined in two places as of this change,
+                # also in decl_api -> _add_manager().  in 2.0, this codepath
+                # is removed as any calls to mapper() / Mapper without
+                # the registry setting up first will be rejected.
+>               raise sa_exc.ArgumentError(
+                    "Class '%s' already has a primary mapper defined. "
+                    % self.class_
+                )
+E               sqlalchemy.exc.ArgumentError: Class '<class 'music.domainmodel.user.User'>' already has a primary mapper defined.
+
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:1267: ArgumentError
+________________________ ERROR at setup of test_logout _________________________
+
+    @pytest.fixture
+    def client():
+>       my_app = create_app({
+            'TESTING': True,                                # Set to True during testing.
+            'TEST_DATA_PATH': TEST_DATA_PATH,               # Path for loading test data into the repository.
+            'WTF_CSRF_ENABLED': False                       # test_client will not send a CSRF token, so disable validation.
+        })
+
+tests/conftest.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+music/__init__.py:78: in create_app
+    map_model_to_tables()
+music/adapters/orm.py:96: in map_model_to_tables
+    mapper(User, users_table, properties={
+venv/lib/python3.8/site-packages/sqlalchemy/util/deprecations.py:309: in warned
+    return fn(*args, **kwargs)
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:690: in __init__
+    self._configure_class_instrumentation()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Mapper at 0x7fc99d46df40; User>
+
+    def _configure_class_instrumentation(self):
+        """If this mapper is to be a primary mapper (i.e. the
+        non_primary flag is not set), associate this Mapper with the
+        given class and entity name.
+    
+        Subsequent calls to ``class_mapper()`` for the ``class_`` / ``entity``
+        name combination will return this mapper.  Also decorate the
+        `__init__` method on the mapped class to include optional
+        auto-session attachment logic.
+    
+        """
+    
+        # we expect that declarative has applied the class manager
+        # already and set up a registry.  if this is None,
+        # we will emit a deprecation warning below when we also see that
+        # it has no registry.
+        manager = attributes.manager_of_class(self.class_)
+    
+        if self.non_primary:
+            if not manager or not manager.is_mapped:
+                raise sa_exc.InvalidRequestError(
+                    "Class %s has no primary mapper configured.  Configure "
+                    "a primary mapper first before setting up a non primary "
+                    "Mapper." % self.class_
+                )
+            self.class_manager = manager
+            self.registry = manager.registry
+            self._identity_class = manager.mapper._identity_class
+            manager.registry._add_non_primary_mapper(self)
+            return
+    
+        if manager is not None:
+            assert manager.class_ is self.class_
+            if manager.is_mapped:
+                # changed in #7579:
+                # this message is defined in two places as of this change,
+                # also in decl_api -> _add_manager().  in 2.0, this codepath
+                # is removed as any calls to mapper() / Mapper without
+                # the registry setting up first will be rejected.
+>               raise sa_exc.ArgumentError(
+                    "Class '%s' already has a primary mapper defined. "
+                    % self.class_
+                )
+E               sqlalchemy.exc.ArgumentError: Class '<class 'music.domainmodel.user.User'>' already has a primary mapper defined.
+
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:1267: ArgumentError
+_________________________ ERROR at setup of test_index _________________________
+
+    @pytest.fixture
+    def client():
+>       my_app = create_app({
+            'TESTING': True,                                # Set to True during testing.
+            'TEST_DATA_PATH': TEST_DATA_PATH,               # Path for loading test data into the repository.
+            'WTF_CSRF_ENABLED': False                       # test_client will not send a CSRF token, so disable validation.
+        })
+
+tests/conftest.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+music/__init__.py:78: in create_app
+    map_model_to_tables()
+music/adapters/orm.py:96: in map_model_to_tables
+    mapper(User, users_table, properties={
+venv/lib/python3.8/site-packages/sqlalchemy/util/deprecations.py:309: in warned
+    return fn(*args, **kwargs)
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:690: in __init__
+    self._configure_class_instrumentation()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Mapper at 0x7fc99d46d3a0; User>
+
+    def _configure_class_instrumentation(self):
+        """If this mapper is to be a primary mapper (i.e. the
+        non_primary flag is not set), associate this Mapper with the
+        given class and entity name.
+    
+        Subsequent calls to ``class_mapper()`` for the ``class_`` / ``entity``
+        name combination will return this mapper.  Also decorate the
+        `__init__` method on the mapped class to include optional
+        auto-session attachment logic.
+    
+        """
+    
+        # we expect that declarative has applied the class manager
+        # already and set up a registry.  if this is None,
+        # we will emit a deprecation warning below when we also see that
+        # it has no registry.
+        manager = attributes.manager_of_class(self.class_)
+    
+        if self.non_primary:
+            if not manager or not manager.is_mapped:
+                raise sa_exc.InvalidRequestError(
+                    "Class %s has no primary mapper configured.  Configure "
+                    "a primary mapper first before setting up a non primary "
+                    "Mapper." % self.class_
+                )
+            self.class_manager = manager
+            self.registry = manager.registry
+            self._identity_class = manager.mapper._identity_class
+            manager.registry._add_non_primary_mapper(self)
+            return
+    
+        if manager is not None:
+            assert manager.class_ is self.class_
+            if manager.is_mapped:
+                # changed in #7579:
+                # this message is defined in two places as of this change,
+                # also in decl_api -> _add_manager().  in 2.0, this codepath
+                # is removed as any calls to mapper() / Mapper without
+                # the registry setting up first will be rejected.
+>               raise sa_exc.ArgumentError(
+                    "Class '%s' already has a primary mapper defined. "
+                    % self.class_
+                )
+E               sqlalchemy.exc.ArgumentError: Class '<class 'music.domainmodel.user.User'>' already has a primary mapper defined.
+
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:1267: ArgumentError
+________________________ ERROR at setup of test_search _________________________
+
+    @pytest.fixture
+    def client():
+>       my_app = create_app({
+            'TESTING': True,                                # Set to True during testing.
+            'TEST_DATA_PATH': TEST_DATA_PATH,               # Path for loading test data into the repository.
+            'WTF_CSRF_ENABLED': False                       # test_client will not send a CSRF token, so disable validation.
+        })
+
+tests/conftest.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+music/__init__.py:78: in create_app
+    map_model_to_tables()
+music/adapters/orm.py:96: in map_model_to_tables
+    mapper(User, users_table, properties={
+venv/lib/python3.8/site-packages/sqlalchemy/util/deprecations.py:309: in warned
+    return fn(*args, **kwargs)
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:690: in __init__
+    self._configure_class_instrumentation()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Mapper at 0x7fc99d6977f0; User>
+
+    def _configure_class_instrumentation(self):
+        """If this mapper is to be a primary mapper (i.e. the
+        non_primary flag is not set), associate this Mapper with the
+        given class and entity name.
+    
+        Subsequent calls to ``class_mapper()`` for the ``class_`` / ``entity``
+        name combination will return this mapper.  Also decorate the
+        `__init__` method on the mapped class to include optional
+        auto-session attachment logic.
+    
+        """
+    
+        # we expect that declarative has applied the class manager
+        # already and set up a registry.  if this is None,
+        # we will emit a deprecation warning below when we also see that
+        # it has no registry.
+        manager = attributes.manager_of_class(self.class_)
+    
+        if self.non_primary:
+            if not manager or not manager.is_mapped:
+                raise sa_exc.InvalidRequestError(
+                    "Class %s has no primary mapper configured.  Configure "
+                    "a primary mapper first before setting up a non primary "
+                    "Mapper." % self.class_
+                )
+            self.class_manager = manager
+            self.registry = manager.registry
+            self._identity_class = manager.mapper._identity_class
+            manager.registry._add_non_primary_mapper(self)
+            return
+    
+        if manager is not None:
+            assert manager.class_ is self.class_
+            if manager.is_mapped:
+                # changed in #7579:
+                # this message is defined in two places as of this change,
+                # also in decl_api -> _add_manager().  in 2.0, this codepath
+                # is removed as any calls to mapper() / Mapper without
+                # the registry setting up first will be rejected.
+>               raise sa_exc.ArgumentError(
+                    "Class '%s' already has a primary mapper defined. "
+                    % self.class_
+                )
+E               sqlalchemy.exc.ArgumentError: Class '<class 'music.domainmodel.user.User'>' already has a primary mapper defined.
+
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:1267: ArgumentError
+____________________ ERROR at setup of test_track_info_page ____________________
+
+    @pytest.fixture
+    def client():
+>       my_app = create_app({
+            'TESTING': True,                                # Set to True during testing.
+            'TEST_DATA_PATH': TEST_DATA_PATH,               # Path for loading test data into the repository.
+            'WTF_CSRF_ENABLED': False                       # test_client will not send a CSRF token, so disable validation.
+        })
+
+tests/conftest.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+music/__init__.py:78: in create_app
+    map_model_to_tables()
+music/adapters/orm.py:96: in map_model_to_tables
+    mapper(User, users_table, properties={
+venv/lib/python3.8/site-packages/sqlalchemy/util/deprecations.py:309: in warned
+    return fn(*args, **kwargs)
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:690: in __init__
+    self._configure_class_instrumentation()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Mapper at 0x7fc99d5ca6a0; User>
+
+    def _configure_class_instrumentation(self):
+        """If this mapper is to be a primary mapper (i.e. the
+        non_primary flag is not set), associate this Mapper with the
+        given class and entity name.
+    
+        Subsequent calls to ``class_mapper()`` for the ``class_`` / ``entity``
+        name combination will return this mapper.  Also decorate the
+        `__init__` method on the mapped class to include optional
+        auto-session attachment logic.
+    
+        """
+    
+        # we expect that declarative has applied the class manager
+        # already and set up a registry.  if this is None,
+        # we will emit a deprecation warning below when we also see that
+        # it has no registry.
+        manager = attributes.manager_of_class(self.class_)
+    
+        if self.non_primary:
+            if not manager or not manager.is_mapped:
+                raise sa_exc.InvalidRequestError(
+                    "Class %s has no primary mapper configured.  Configure "
+                    "a primary mapper first before setting up a non primary "
+                    "Mapper." % self.class_
+                )
+            self.class_manager = manager
+            self.registry = manager.registry
+            self._identity_class = manager.mapper._identity_class
+            manager.registry._add_non_primary_mapper(self)
+            return
+    
+        if manager is not None:
+            assert manager.class_ is self.class_
+            if manager.is_mapped:
+                # changed in #7579:
+                # this message is defined in two places as of this change,
+                # also in decl_api -> _add_manager().  in 2.0, this codepath
+                # is removed as any calls to mapper() / Mapper without
+                # the registry setting up first will be rejected.
+>               raise sa_exc.ArgumentError(
+                    "Class '%s' already has a primary mapper defined. "
+                    % self.class_
+                )
+E               sqlalchemy.exc.ArgumentError: Class '<class 'music.domainmodel.user.User'>' already has a primary mapper defined.
+
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:1267: ArgumentError
+________________________ ERROR at setup of test_review _________________________
+
+    @pytest.fixture
+    def client():
+>       my_app = create_app({
+            'TESTING': True,                                # Set to True during testing.
+            'TEST_DATA_PATH': TEST_DATA_PATH,               # Path for loading test data into the repository.
+            'WTF_CSRF_ENABLED': False                       # test_client will not send a CSRF token, so disable validation.
+        })
+
+tests/conftest.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+music/__init__.py:78: in create_app
+    map_model_to_tables()
+music/adapters/orm.py:96: in map_model_to_tables
+    mapper(User, users_table, properties={
+venv/lib/python3.8/site-packages/sqlalchemy/util/deprecations.py:309: in warned
+    return fn(*args, **kwargs)
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:690: in __init__
+    self._configure_class_instrumentation()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Mapper at 0x7fc99d5e4160; User>
+
+    def _configure_class_instrumentation(self):
+        """If this mapper is to be a primary mapper (i.e. the
+        non_primary flag is not set), associate this Mapper with the
+        given class and entity name.
+    
+        Subsequent calls to ``class_mapper()`` for the ``class_`` / ``entity``
+        name combination will return this mapper.  Also decorate the
+        `__init__` method on the mapped class to include optional
+        auto-session attachment logic.
+    
+        """
+    
+        # we expect that declarative has applied the class manager
+        # already and set up a registry.  if this is None,
+        # we will emit a deprecation warning below when we also see that
+        # it has no registry.
+        manager = attributes.manager_of_class(self.class_)
+    
+        if self.non_primary:
+            if not manager or not manager.is_mapped:
+                raise sa_exc.InvalidRequestError(
+                    "Class %s has no primary mapper configured.  Configure "
+                    "a primary mapper first before setting up a non primary "
+                    "Mapper." % self.class_
+                )
+            self.class_manager = manager
+            self.registry = manager.registry
+            self._identity_class = manager.mapper._identity_class
+            manager.registry._add_non_primary_mapper(self)
+            return
+    
+        if manager is not None:
+            assert manager.class_ is self.class_
+            if manager.is_mapped:
+                # changed in #7579:
+                # this message is defined in two places as of this change,
+                # also in decl_api -> _add_manager().  in 2.0, this codepath
+                # is removed as any calls to mapper() / Mapper without
+                # the registry setting up first will be rejected.
+>               raise sa_exc.ArgumentError(
+                    "Class '%s' already has a primary mapper defined. "
+                    % self.class_
+                )
+E               sqlalchemy.exc.ArgumentError: Class '<class 'music.domainmodel.user.User'>' already has a primary mapper defined.
+
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:1267: ArgumentError
+_ ERROR at setup of test_review_with_invalid_input[Who thinks Trump is a f***wit?-4-Your comment must not contain profanity] _
+
+    @pytest.fixture
+    def client():
+>       my_app = create_app({
+            'TESTING': True,                                # Set to True during testing.
+            'TEST_DATA_PATH': TEST_DATA_PATH,               # Path for loading test data into the repository.
+            'WTF_CSRF_ENABLED': False                       # test_client will not send a CSRF token, so disable validation.
+        })
+
+tests/conftest.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+music/__init__.py:78: in create_app
+    map_model_to_tables()
+music/adapters/orm.py:96: in map_model_to_tables
+    mapper(User, users_table, properties={
+venv/lib/python3.8/site-packages/sqlalchemy/util/deprecations.py:309: in warned
+    return fn(*args, **kwargs)
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:690: in __init__
+    self._configure_class_instrumentation()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Mapper at 0x7fc99d5e4520; User>
+
+    def _configure_class_instrumentation(self):
+        """If this mapper is to be a primary mapper (i.e. the
+        non_primary flag is not set), associate this Mapper with the
+        given class and entity name.
+    
+        Subsequent calls to ``class_mapper()`` for the ``class_`` / ``entity``
+        name combination will return this mapper.  Also decorate the
+        `__init__` method on the mapped class to include optional
+        auto-session attachment logic.
+    
+        """
+    
+        # we expect that declarative has applied the class manager
+        # already and set up a registry.  if this is None,
+        # we will emit a deprecation warning below when we also see that
+        # it has no registry.
+        manager = attributes.manager_of_class(self.class_)
+    
+        if self.non_primary:
+            if not manager or not manager.is_mapped:
+                raise sa_exc.InvalidRequestError(
+                    "Class %s has no primary mapper configured.  Configure "
+                    "a primary mapper first before setting up a non primary "
+                    "Mapper." % self.class_
+                )
+            self.class_manager = manager
+            self.registry = manager.registry
+            self._identity_class = manager.mapper._identity_class
+            manager.registry._add_non_primary_mapper(self)
+            return
+    
+        if manager is not None:
+            assert manager.class_ is self.class_
+            if manager.is_mapped:
+                # changed in #7579:
+                # this message is defined in two places as of this change,
+                # also in decl_api -> _add_manager().  in 2.0, this codepath
+                # is removed as any calls to mapper() / Mapper without
+                # the registry setting up first will be rejected.
+>               raise sa_exc.ArgumentError(
+                    "Class '%s' already has a primary mapper defined. "
+                    % self.class_
+                )
+E               sqlalchemy.exc.ArgumentError: Class '<class 'music.domainmodel.user.User'>' already has a primary mapper defined.
+
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:1267: ArgumentError
+_ ERROR at setup of test_review_with_invalid_input[Hey-5-Please only use between 20 - 2000 characters when writing your review] _
+
+    @pytest.fixture
+    def client():
+>       my_app = create_app({
+            'TESTING': True,                                # Set to True during testing.
+            'TEST_DATA_PATH': TEST_DATA_PATH,               # Path for loading test data into the repository.
+            'WTF_CSRF_ENABLED': False                       # test_client will not send a CSRF token, so disable validation.
+        })
+
+tests/conftest.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+music/__init__.py:78: in create_app
+    map_model_to_tables()
+music/adapters/orm.py:96: in map_model_to_tables
+    mapper(User, users_table, properties={
+venv/lib/python3.8/site-packages/sqlalchemy/util/deprecations.py:309: in warned
+    return fn(*args, **kwargs)
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:690: in __init__
+    self._configure_class_instrumentation()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Mapper at 0x7fc99d27a700; User>
+
+    def _configure_class_instrumentation(self):
+        """If this mapper is to be a primary mapper (i.e. the
+        non_primary flag is not set), associate this Mapper with the
+        given class and entity name.
+    
+        Subsequent calls to ``class_mapper()`` for the ``class_`` / ``entity``
+        name combination will return this mapper.  Also decorate the
+        `__init__` method on the mapped class to include optional
+        auto-session attachment logic.
+    
+        """
+    
+        # we expect that declarative has applied the class manager
+        # already and set up a registry.  if this is None,
+        # we will emit a deprecation warning below when we also see that
+        # it has no registry.
+        manager = attributes.manager_of_class(self.class_)
+    
+        if self.non_primary:
+            if not manager or not manager.is_mapped:
+                raise sa_exc.InvalidRequestError(
+                    "Class %s has no primary mapper configured.  Configure "
+                    "a primary mapper first before setting up a non primary "
+                    "Mapper." % self.class_
+                )
+            self.class_manager = manager
+            self.registry = manager.registry
+            self._identity_class = manager.mapper._identity_class
+            manager.registry._add_non_primary_mapper(self)
+            return
+    
+        if manager is not None:
+            assert manager.class_ is self.class_
+            if manager.is_mapped:
+                # changed in #7579:
+                # this message is defined in two places as of this change,
+                # also in decl_api -> _add_manager().  in 2.0, this codepath
+                # is removed as any calls to mapper() / Mapper without
+                # the registry setting up first will be rejected.
+>               raise sa_exc.ArgumentError(
+                    "Class '%s' already has a primary mapper defined. "
+                    % self.class_
+                )
+E               sqlalchemy.exc.ArgumentError: Class '<class 'music.domainmodel.user.User'>' already has a primary mapper defined.
+
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:1267: ArgumentError
+_ ERROR at setup of test_review_with_invalid_input[hello, i am under the water, how are you?-10-select number between 1 and 5] _
+
+    @pytest.fixture
+    def client():
+>       my_app = create_app({
+            'TESTING': True,                                # Set to True during testing.
+            'TEST_DATA_PATH': TEST_DATA_PATH,               # Path for loading test data into the repository.
+            'WTF_CSRF_ENABLED': False                       # test_client will not send a CSRF token, so disable validation.
+        })
+
+tests/conftest.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+music/__init__.py:78: in create_app
+    map_model_to_tables()
+music/adapters/orm.py:96: in map_model_to_tables
+    mapper(User, users_table, properties={
+venv/lib/python3.8/site-packages/sqlalchemy/util/deprecations.py:309: in warned
+    return fn(*args, **kwargs)
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:690: in __init__
+    self._configure_class_instrumentation()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Mapper at 0x7fc99d3f18b0; User>
+
+    def _configure_class_instrumentation(self):
+        """If this mapper is to be a primary mapper (i.e. the
+        non_primary flag is not set), associate this Mapper with the
+        given class and entity name.
+    
+        Subsequent calls to ``class_mapper()`` for the ``class_`` / ``entity``
+        name combination will return this mapper.  Also decorate the
+        `__init__` method on the mapped class to include optional
+        auto-session attachment logic.
+    
+        """
+    
+        # we expect that declarative has applied the class manager
+        # already and set up a registry.  if this is None,
+        # we will emit a deprecation warning below when we also see that
+        # it has no registry.
+        manager = attributes.manager_of_class(self.class_)
+    
+        if self.non_primary:
+            if not manager or not manager.is_mapped:
+                raise sa_exc.InvalidRequestError(
+                    "Class %s has no primary mapper configured.  Configure "
+                    "a primary mapper first before setting up a non primary "
+                    "Mapper." % self.class_
+                )
+            self.class_manager = manager
+            self.registry = manager.registry
+            self._identity_class = manager.mapper._identity_class
+            manager.registry._add_non_primary_mapper(self)
+            return
+    
+        if manager is not None:
+            assert manager.class_ is self.class_
+            if manager.is_mapped:
+                # changed in #7579:
+                # this message is defined in two places as of this change,
+                # also in decl_api -> _add_manager().  in 2.0, this codepath
+                # is removed as any calls to mapper() / Mapper without
+                # the registry setting up first will be rejected.
+>               raise sa_exc.ArgumentError(
+                    "Class '%s' already has a primary mapper defined. "
+                    % self.class_
+                )
+E               sqlalchemy.exc.ArgumentError: Class '<class 'music.domainmodel.user.User'>' already has a primary mapper defined.
+
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:1267: ArgumentError
+_____________________ ERROR at setup of test_review_board ______________________
+
+    @pytest.fixture
+    def client():
+>       my_app = create_app({
+            'TESTING': True,                                # Set to True during testing.
+            'TEST_DATA_PATH': TEST_DATA_PATH,               # Path for loading test data into the repository.
+            'WTF_CSRF_ENABLED': False                       # test_client will not send a CSRF token, so disable validation.
+        })
+
+tests/conftest.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+music/__init__.py:78: in create_app
+    map_model_to_tables()
+music/adapters/orm.py:96: in map_model_to_tables
+    mapper(User, users_table, properties={
+venv/lib/python3.8/site-packages/sqlalchemy/util/deprecations.py:309: in warned
+    return fn(*args, **kwargs)
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:690: in __init__
+    self._configure_class_instrumentation()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Mapper at 0x7fc99d3f14c0; User>
+
+    def _configure_class_instrumentation(self):
+        """If this mapper is to be a primary mapper (i.e. the
+        non_primary flag is not set), associate this Mapper with the
+        given class and entity name.
+    
+        Subsequent calls to ``class_mapper()`` for the ``class_`` / ``entity``
+        name combination will return this mapper.  Also decorate the
+        `__init__` method on the mapped class to include optional
+        auto-session attachment logic.
+    
+        """
+    
+        # we expect that declarative has applied the class manager
+        # already and set up a registry.  if this is None,
+        # we will emit a deprecation warning below when we also see that
+        # it has no registry.
+        manager = attributes.manager_of_class(self.class_)
+    
+        if self.non_primary:
+            if not manager or not manager.is_mapped:
+                raise sa_exc.InvalidRequestError(
+                    "Class %s has no primary mapper configured.  Configure "
+                    "a primary mapper first before setting up a non primary "
+                    "Mapper." % self.class_
+                )
+            self.class_manager = manager
+            self.registry = manager.registry
+            self._identity_class = manager.mapper._identity_class
+            manager.registry._add_non_primary_mapper(self)
+            return
+    
+        if manager is not None:
+            assert manager.class_ is self.class_
+            if manager.is_mapped:
+                # changed in #7579:
+                # this message is defined in two places as of this change,
+                # also in decl_api -> _add_manager().  in 2.0, this codepath
+                # is removed as any calls to mapper() / Mapper without
+                # the registry setting up first will be rejected.
+>               raise sa_exc.ArgumentError(
+                    "Class '%s' already has a primary mapper defined. "
+                    % self.class_
+                )
+E               sqlalchemy.exc.ArgumentError: Class '<class 'music.domainmodel.user.User'>' already has a primary mapper defined.
+
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:1267: ArgumentError
+_____________________ ERROR at setup of test_liking_tracks _____________________
+
+    @pytest.fixture
+    def client():
+>       my_app = create_app({
+            'TESTING': True,                                # Set to True during testing.
+            'TEST_DATA_PATH': TEST_DATA_PATH,               # Path for loading test data into the repository.
+            'WTF_CSRF_ENABLED': False                       # test_client will not send a CSRF token, so disable validation.
+        })
+
+tests/conftest.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+music/__init__.py:78: in create_app
+    map_model_to_tables()
+music/adapters/orm.py:96: in map_model_to_tables
+    mapper(User, users_table, properties={
+venv/lib/python3.8/site-packages/sqlalchemy/util/deprecations.py:309: in warned
+    return fn(*args, **kwargs)
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:690: in __init__
+    self._configure_class_instrumentation()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Mapper at 0x7fc99d432700; User>
+
+    def _configure_class_instrumentation(self):
+        """If this mapper is to be a primary mapper (i.e. the
+        non_primary flag is not set), associate this Mapper with the
+        given class and entity name.
+    
+        Subsequent calls to ``class_mapper()`` for the ``class_`` / ``entity``
+        name combination will return this mapper.  Also decorate the
+        `__init__` method on the mapped class to include optional
+        auto-session attachment logic.
+    
+        """
+    
+        # we expect that declarative has applied the class manager
+        # already and set up a registry.  if this is None,
+        # we will emit a deprecation warning below when we also see that
+        # it has no registry.
+        manager = attributes.manager_of_class(self.class_)
+    
+        if self.non_primary:
+            if not manager or not manager.is_mapped:
+                raise sa_exc.InvalidRequestError(
+                    "Class %s has no primary mapper configured.  Configure "
+                    "a primary mapper first before setting up a non primary "
+                    "Mapper." % self.class_
+                )
+            self.class_manager = manager
+            self.registry = manager.registry
+            self._identity_class = manager.mapper._identity_class
+            manager.registry._add_non_primary_mapper(self)
+            return
+    
+        if manager is not None:
+            assert manager.class_ is self.class_
+            if manager.is_mapped:
+                # changed in #7579:
+                # this message is defined in two places as of this change,
+                # also in decl_api -> _add_manager().  in 2.0, this codepath
+                # is removed as any calls to mapper() / Mapper without
+                # the registry setting up first will be rejected.
+>               raise sa_exc.ArgumentError(
+                    "Class '%s' already has a primary mapper defined. "
+                    % self.class_
+                )
+E               sqlalchemy.exc.ArgumentError: Class '<class 'music.domainmodel.user.User'>' already has a primary mapper defined.
+
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:1267: ArgumentError
+_____________________ ERROR at setup of test_invalid_page ______________________
+
+    @pytest.fixture
+    def client():
+>       my_app = create_app({
+            'TESTING': True,                                # Set to True during testing.
+            'TEST_DATA_PATH': TEST_DATA_PATH,               # Path for loading test data into the repository.
+            'WTF_CSRF_ENABLED': False                       # test_client will not send a CSRF token, so disable validation.
+        })
+
+tests/conftest.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+music/__init__.py:78: in create_app
+    map_model_to_tables()
+music/adapters/orm.py:96: in map_model_to_tables
+    mapper(User, users_table, properties={
+venv/lib/python3.8/site-packages/sqlalchemy/util/deprecations.py:309: in warned
+    return fn(*args, **kwargs)
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:690: in __init__
+    self._configure_class_instrumentation()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Mapper at 0x7fc99dad7ca0; User>
+
+    def _configure_class_instrumentation(self):
+        """If this mapper is to be a primary mapper (i.e. the
+        non_primary flag is not set), associate this Mapper with the
+        given class and entity name.
+    
+        Subsequent calls to ``class_mapper()`` for the ``class_`` / ``entity``
+        name combination will return this mapper.  Also decorate the
+        `__init__` method on the mapped class to include optional
+        auto-session attachment logic.
+    
+        """
+    
+        # we expect that declarative has applied the class manager
+        # already and set up a registry.  if this is None,
+        # we will emit a deprecation warning below when we also see that
+        # it has no registry.
+        manager = attributes.manager_of_class(self.class_)
+    
+        if self.non_primary:
+            if not manager or not manager.is_mapped:
+                raise sa_exc.InvalidRequestError(
+                    "Class %s has no primary mapper configured.  Configure "
+                    "a primary mapper first before setting up a non primary "
+                    "Mapper." % self.class_
+                )
+            self.class_manager = manager
+            self.registry = manager.registry
+            self._identity_class = manager.mapper._identity_class
+            manager.registry._add_non_primary_mapper(self)
+            return
+    
+        if manager is not None:
+            assert manager.class_ is self.class_
+            if manager.is_mapped:
+                # changed in #7579:
+                # this message is defined in two places as of this change,
+                # also in decl_api -> _add_manager().  in 2.0, this codepath
+                # is removed as any calls to mapper() / Mapper without
+                # the registry setting up first will be rejected.
+>               raise sa_exc.ArgumentError(
+                    "Class '%s' already has a primary mapper defined. "
+                    % self.class_
+                )
+E               sqlalchemy.exc.ArgumentError: Class '<class 'music.domainmodel.user.User'>' already has a primary mapper defined.
+
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:1267: ArgumentError
+_______________________ ERROR at setup of test_playlist ________________________
+
+    @pytest.fixture
+    def client():
+>       my_app = create_app({
+            'TESTING': True,                                # Set to True during testing.
+            'TEST_DATA_PATH': TEST_DATA_PATH,               # Path for loading test data into the repository.
+            'WTF_CSRF_ENABLED': False                       # test_client will not send a CSRF token, so disable validation.
+        })
+
+tests/conftest.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+music/__init__.py:78: in create_app
+    map_model_to_tables()
+music/adapters/orm.py:96: in map_model_to_tables
+    mapper(User, users_table, properties={
+venv/lib/python3.8/site-packages/sqlalchemy/util/deprecations.py:309: in warned
+    return fn(*args, **kwargs)
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:690: in __init__
+    self._configure_class_instrumentation()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Mapper at 0x7fc99dad7b80; User>
+
+    def _configure_class_instrumentation(self):
+        """If this mapper is to be a primary mapper (i.e. the
+        non_primary flag is not set), associate this Mapper with the
+        given class and entity name.
+    
+        Subsequent calls to ``class_mapper()`` for the ``class_`` / ``entity``
+        name combination will return this mapper.  Also decorate the
+        `__init__` method on the mapped class to include optional
+        auto-session attachment logic.
+    
+        """
+    
+        # we expect that declarative has applied the class manager
+        # already and set up a registry.  if this is None,
+        # we will emit a deprecation warning below when we also see that
+        # it has no registry.
+        manager = attributes.manager_of_class(self.class_)
+    
+        if self.non_primary:
+            if not manager or not manager.is_mapped:
+                raise sa_exc.InvalidRequestError(
+                    "Class %s has no primary mapper configured.  Configure "
+                    "a primary mapper first before setting up a non primary "
+                    "Mapper." % self.class_
+                )
+            self.class_manager = manager
+            self.registry = manager.registry
+            self._identity_class = manager.mapper._identity_class
+            manager.registry._add_non_primary_mapper(self)
+            return
+    
+        if manager is not None:
+            assert manager.class_ is self.class_
+            if manager.is_mapped:
+                # changed in #7579:
+                # this message is defined in two places as of this change,
+                # also in decl_api -> _add_manager().  in 2.0, this codepath
+                # is removed as any calls to mapper() / Mapper without
+                # the registry setting up first will be rejected.
+>               raise sa_exc.ArgumentError(
+                    "Class '%s' already has a primary mapper defined. "
+                    % self.class_
+                )
+E               sqlalchemy.exc.ArgumentError: Class '<class 'music.domainmodel.user.User'>' already has a primary mapper defined.
+
+venv/lib/python3.8/site-packages/sqlalchemy/orm/mapper.py:1267: ArgumentError
+=============================== warnings summary ===============================
+music/__init__.py:2
+  /home/pkas/projects/git_repos/cs235_2022_assignment-pkas830_hhan941/music/__init__.py:2: DeprecationWarning: the imp module is deprecated in favour of importlib; see the module's documentation for alternative uses
+    import imp
+
+tests/e2e/test_web_app.py: 19 warnings
+  /home/pkas/projects/git_repos/cs235_2022_assignment-pkas830_hhan941/music/__init__.py:61: SADeprecationWarning: The Engine.table_names() method is deprecated and will be removed in a future release.  Please refer to Inspector.get_table_names(). (deprecated since: 1.4)
+    if app.config['TESTING'] == 'True' or len(database_engine.table_names()) == 0:
+
+tests/unit/test_domainmodel.py: 5 warnings
+tests/unit/test_memory_repository.py: 17 warnings
+tests/unit/test_services.py: 19 warnings
+  /usr/lib/python3.8/encodings/unicode_escape.py:26: DeprecationWarning: invalid escape sequence '\,'
+    return codecs.unicode_escape_decode(input, self.errors)[0]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+ERROR tests/e2e/test_web_app.py::test_register_with_invalid_input[--Your user name is required]
+ERROR tests/e2e/test_web_app.py::test_register_with_invalid_input[cj--Your user name is too short]
+ERROR tests/e2e/test_web_app.py::test_register_with_invalid_input[test--Your password is required]
+ERROR tests/e2e/test_web_app.py::test_register_with_invalid_input[test-test-Your password must be at least 8 characters, and contain an upper case letter, a lower case letter and a digit]
+ERROR tests/e2e/test_web_app.py::test_register_with_invalid_input[gmichael-CarelessWhisper1984-Your user name is already taken - please supply another]
+ERROR tests/e2e/test_web_app.py::test_login - sqlalchemy.exc.ArgumentError: C...
+ERROR tests/e2e/test_web_app.py::test_logout - sqlalchemy.exc.ArgumentError: ...
+ERROR tests/e2e/test_web_app.py::test_index - sqlalchemy.exc.ArgumentError: C...
+ERROR tests/e2e/test_web_app.py::test_search - sqlalchemy.exc.ArgumentError: ...
+ERROR tests/e2e/test_web_app.py::test_track_info_page - sqlalchemy.exc.Argume...
+ERROR tests/e2e/test_web_app.py::test_review - sqlalchemy.exc.ArgumentError: ...
+ERROR tests/e2e/test_web_app.py::test_review_with_invalid_input[Who thinks Trump is a f***wit?-4-Your comment must not contain profanity]
+ERROR tests/e2e/test_web_app.py::test_review_with_invalid_input[Hey-5-Please only use between 20 - 2000 characters when writing your review]
+ERROR tests/e2e/test_web_app.py::test_review_with_invalid_input[hello, i am under the water, how are you?-10-select number between 1 and 5]
+ERROR tests/e2e/test_web_app.py::test_review_board - sqlalchemy.exc.ArgumentE...
+ERROR tests/e2e/test_web_app.py::test_liking_tracks - sqlalchemy.exc.Argument...
+ERROR tests/e2e/test_web_app.py::test_invalid_page - sqlalchemy.exc.ArgumentE...
+ERROR tests/e2e/test_web_app.py::test_playlist - sqlalchemy.exc.ArgumentError...
+================= 77 passed, 61 warnings, 18 errors in 13.80s ==================
