@@ -1,14 +1,10 @@
 # COMPSCI 235 Starter Repository for Assignment 2
-This is a starter repository for the assignment 2 of CompSci 235 in Semester 2, 2022.
+Welcome to Signature sounds!
 
 
 ## Description
 
-This repository contains an implementation of the domain model from Assignment 1. It contains unit tests which can be run through pytest. It also contains a simple Flask application that renders content of a Track object instance from our domain model on a blank html page.
-
-Please note that this sample implementation from Assignment 1 contains a more comprehensive superset of tests compared with what we had as hidden tests on Coderunner. Your domain model implementation may have to be extended to meet all test cases in the sample implementation, but you may also decide to remove or modify test cases as it suits you. 
-
-From here on you can **choose if you want to use the provided domain model or your own implementation from assignment 1**, just make sure your chosen set of test cases always work with your implementation.
+This repository contains an implementation of the the signature sounds, a web application build using the Framework. This application aims to build off the domainmodel designed in A1 and provide a MVP which allows users to browse tracks, add reviews, like tracks and create, alongside share playlists. 
 
 ## Installation
 
@@ -16,7 +12,8 @@ From here on you can **choose if you want to use the provided domain model or yo
 
 ```shell
 $ py -3 -m venv venv
-$ venv\Scripts\activate
+$ venv\Scripts\activate (Windows)
+$ source venv/bin/activate (unix/linux)
 $ pip install -r requirements.txt
 ```
 

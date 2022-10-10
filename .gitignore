@@ -7,3 +7,5 @@ htmlcov
 venv
 *.db
 *.egg-info
+
+errors.txt
