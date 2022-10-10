@@ -1,22 +1,21 @@
 ============================= test session starts ==============================
 platform linux -- Python 3.8.10, pytest-7.1.2, pluggy-1.0.0
 rootdir: /home/pkas/projects/git_repos/cs235_2022_assignment-pkas830_hhan941
-collected 100 items
+collected 96 items
 
 tests/e2e/test_web_app.py ...................                            [ 19%]
-tests/unit/test_domainmodel.py ........................................  [ 59%]
-tests/unit/test_memory_repository.py .................                   [ 76%]
-tests/unit/test_services.py ...................                          [ 95%]
-tests_db/unit/test_populate.py .....                                     [100%]
+tests/unit/test_domainmodel.py ........................................  [ 61%]
+tests/unit/test_memory_repository.py .................                   [ 79%]
+tests/unit/test_services.py ...................                          [ 98%]
+tests_db/unit/test_orm.py .                                              [100%]
 
 =============================== warnings summary ===============================
 tests/e2e/test_web_app.py: 19 warnings
 tests/unit/test_domainmodel.py: 5 warnings
 tests/unit/test_memory_repository.py: 17 warnings
 tests/unit/test_services.py: 19 warnings
-tests_db/unit/test_populate.py: 5 warnings
   /usr/lib/python3.8/encodings/unicode_escape.py:26: DeprecationWarning: invalid escape sequence '\,'
     return codecs.unicode_escape_decode(input, self.errors)[0]
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-================= 100 passed, 65 warnings in 180.75s (0:03:00) =================
+======================= 96 passed, 60 warnings in 9.81s ========================
