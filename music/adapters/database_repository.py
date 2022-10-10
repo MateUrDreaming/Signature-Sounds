@@ -191,8 +191,13 @@ class SqlAlchemyRepository(AbstractRepository):
             return tracks
         else:
             # Return tracks matching target_genre; return an empty list if there are no matches.
-            tracks = self._session_cm.session.query(Track).filter(target_genre in Track._Track__genres).all()
-            return tracks
+            tracks_with_genre = []
+            tracks = self._session_cm.session.query(Track).all()
+            for track in tracks:
+                for genre in track.genres:
+                    if genre == target_genre:
+                        tracks_with_genre.append(track)
+            return tracks_with_genre
     
     def get_tracks_by_album(self, target_album: Album) -> List[Track]:
         if target_album is None:
