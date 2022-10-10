@@ -1,4 +1,5 @@
 from datetime import datetime
+from enum import unique
 from sqlalchemy import (
     Table, MetaData, Column, Integer, String, Date, DateTime, Boolean,
     ForeignKey, func
@@ -82,7 +83,7 @@ playlist_table = Table(
     Column('playlist_id', Integer, primary_key=True, autoincrement=True),
     Column('playlist_title', String(255), nullable=False),
     Column('playlist_user', ForeignKey('users.id')),
-    Column('public', Boolean, server_default=u'False'),
+    Column('public', Boolean, unique=False, default=False, nullable=False),
 )
 
 user_playlist_table = Table(

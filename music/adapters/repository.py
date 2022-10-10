@@ -223,3 +223,8 @@ class AbstractRepository(abc.ABC):
     def remove_track_from_playlist(self, track: Track, playlist: PlayList):
         """ removes a track from playlist."""
         raise NotImplementedError
+
+    @abc.abstractmethod
+    def change_vis_of_playlist(self, playlist: PlayList):
+        """ removes a track from playlist."""
+        raise NotImplementedError

@@ -265,6 +265,9 @@ class MemoryRepository(AbstractRepository):
     
     def remove_track_from_playlist(self, track: Track, playlist: PlayList):
         return playlist.remove_track(track)
+    
+    def change_vis_of_playlist(self, playlist: PlayList):
+        playlist.switch_visibility()
 
 def populate(data_path: Path, repo: MemoryRepository, database_mode=False):
     """ Populates the given repository using data at the given path. """

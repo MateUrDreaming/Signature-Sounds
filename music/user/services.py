@@ -32,7 +32,7 @@ def remove_playlist(repo:AbstractRepository, user: User, playlist_id):
 
 def change_visibility(repo, user, playlist_id): 
     playlist = repo.get_playlist_by_id(int(playlist_id))
-    playlist.switch_visibility()
+    repo.change_vis_of_playlist(playlist)
 
 def get_all_playlists(repo: AbstractRepository): 
     return repo.get_visible_playlists()

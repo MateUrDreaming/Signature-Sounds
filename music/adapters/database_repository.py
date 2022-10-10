@@ -1,6 +1,3 @@
-from curses.ascii import US
-from datetime import date
-from re import U
 from typing import List
 
 from sqlalchemy import desc, asc, func
@@ -308,9 +305,16 @@ class SqlAlchemyRepository(AbstractRepository):
             scm.session.commit()
 
     def get_visible_playlists(self): 
-        playlists = self._session_cm.session.query(PlayList).filter(PlayList._PlayList__is_public == True).all()
+        playlists = self._session_cm.session.query(PlayList).filter(PlayList._PlayList__is_public == 1).all()
         return playlists
-
+    
+    def change_vis_of_playlist(self, playlist: PlayList):
+        print(playlist.is_public)
+        with self._session_cm as scm:
+            playlist.switch_visibility()
+            scm.session.commit()
+        print(playlist.is_public)
+        
 def populate_two(data_path: Path, repo: SqlAlchemyRepository, database_mode=False):
     """ Populates the given repository using data at the given path. """
     dirname = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
