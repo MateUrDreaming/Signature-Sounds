@@ -179,7 +179,6 @@ def playlistID(playlist_id: int):
         session.clear()
         pass
     playlist = services.get_playlist_by_id(repo.repo_instance, playlist_id)
-
     if playlist: 
         leng = playlist.size()
     else: leng = 0

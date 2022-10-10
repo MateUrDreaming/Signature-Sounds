@@ -1,6 +1,7 @@
 import os
 import csv
 import ast
+from xmlrpc.client import Boolean
 
 from music.domainmodel.artist import Artist
 from music.domainmodel.album import Album
@@ -59,7 +60,7 @@ def extract_genres(track_row: dict):
 
 class TrackCSVReader:
 
-    def __init__(self, albums_csv_file: str, tracks_csv_file: str):
+    def __init__(self, albums_csv_file: str, tracks_csv_file: str, database_mode: Boolean):
         if type(albums_csv_file) is str:
             self.__albums_csv_file = albums_csv_file
         else:
@@ -69,6 +70,7 @@ class TrackCSVReader:
             self.__tracks_csv_file = tracks_csv_file
         else:
             raise TypeError('tracks_csv_file should be a type of string')
+        self.__database_mode = database_mode
 
         # List of unique tracks
         self.__dataset_of_tracks = []

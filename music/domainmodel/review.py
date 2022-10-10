@@ -56,10 +56,12 @@ class Review:
     def user(self) -> datetime:
         return self.__user
     
+    
     @user.setter
-    def user(self, user_name: str):
-        if isinstance(user_name, str):
-            self.__user = user_name
+    def user(self, user):
+        from music.domainmodel.user import User
+        if isinstance(user, User):
+            self.__user = user
         else:
             self.__user = None
             raise ValueError("invalid user")

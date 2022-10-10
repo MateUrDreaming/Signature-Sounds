@@ -1,6 +1,8 @@
 import pytest
 import os
 
+from sqlalchemy import false
+
 from music.domainmodel.artist import Artist
 from music.domainmodel.track import Track
 from music.domainmodel.genre import Genre
@@ -714,7 +716,7 @@ def create_csv_reader():
     dirname = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     albums_file_name = os.path.join(dirname, 'data/raw_albums_excerpt.csv')
     tracks_file_name = os.path.join(dirname, 'data/raw_tracks_excerpt.csv')
-    reader = TrackCSVReader(albums_file_name, tracks_file_name)
+    reader = TrackCSVReader(albums_file_name, tracks_file_name, database_mode=False)
     reader.read_csv_files()
     return reader
 

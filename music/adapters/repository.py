@@ -213,3 +213,18 @@ class AbstractRepository(abc.ABC):
     def get_visible_playlists(self): 
         """ Returns all visible playlists"""
         raise NotImplementedError
+    
+    @abc.abstractmethod
+    def add_track_to_playlist(self, track: Track, playlist: PlayList):
+        """Returns adds track to a playlist."""
+        raise NotImplementedError
+    
+    @abc.abstractmethod
+    def remove_track_from_playlist(self, track: Track, playlist: PlayList):
+        """ removes a track from playlist."""
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def change_vis_of_playlist(self, playlist: PlayList):
+        """ removes a track from playlist."""
+        raise NotImplementedError
