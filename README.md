@@ -4,7 +4,7 @@ Welcome to Signature sounds!
 
 ## Description
 
-This repository contains an implementation of signature sounds, a web application build using the Flask framework. This application aims to build off the domainmodel designed in A1 and provide a MVP which allows users to browse tracks, add reviews, like tracks and create, alongside share playlists. 
+This repository contains an implementation of signature sounds, a web application built using the Flask framework. This application aims to build off the domainmodel designed in A1 and provide a MVP which allows users to browse tracks, add reviews, like tracks and create, alongside share playlists. 
 
 ## Installation
 
