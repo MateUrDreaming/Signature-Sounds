@@ -1,5 +1,5 @@
-# COMPSCI 235 Starter Repository for Assignment 2
-Welcome to Signature sounds!
+# Signature Sounds
+Welcome to Signature sounds! This is a flask application that was made in 2022 by Parin Kasabia and Harlean Hansra for a Computer Science course at the University of auckland. The purpose of this application is to facilitate music lovers dreams by allowing them to find new tracks, leave reviews and add them to a dedicated playlist. (Note that this application is only a MVP, a proof of concept)
 
 
 ## Description
